@@ -11,3 +11,4 @@ path = "src/main.rs"
 
 [dependencies]
 common = { path = "../common" }
+clap = { version = "4.0", features = ["derive"] }
