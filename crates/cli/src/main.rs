@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 
 use common::stream::process_io;
+use common::gamestate::hello;
 
 
 #[derive(Parser)]
@@ -27,6 +28,7 @@ fn main() {
     match &cli.command {
         Commands::Gamestate {throttle} => {
             println!("called gamestate with throttle: {throttle:?}");
+            hello();
         },
         Commands::Render => {
             println!("called render");
