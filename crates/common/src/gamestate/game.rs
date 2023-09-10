@@ -1,3 +1,4 @@
+use crossterm::event::KeyModifiers;
 use rand::Rng;
 
 use crate::gamestate::physics::{Direction, Position};
@@ -88,8 +89,8 @@ impl Game {
         }
     }
 
-    pub fn key_down(&mut self, key: keyboard::Key) {
-        use keyboard::Key;
+    pub fn key_down(&mut self, event: crossterm::event::Event) -> Option<()> {
+        use crossterm::event::{Event, KeyCode, KeyEvent};
 
         // match key {
         //     Key::R => self.over = false, // temp solution -> replace current game state trough new one
@@ -97,12 +98,29 @@ impl Game {
         //     _ => self.start(),
         // }
 
-        match key {
-            Key::A | Key::Left => self.snake.set_dir(Direction::Left),
-            Key::W | Key::Up => self.snake.set_dir(Direction::Up),
-            Key::D | Key::Right => self.snake.set_dir(Direction::Right),
-            Key::S | Key::Down => self.snake.set_dir(Direction::Down),
-            _ => {}
+        match event {
+            Event::Key(KeyEvent{
+                code: KeyCode::Left,
+                ..
+            }) => Some(println!("left\r")),
+            Event::Key(KeyEvent{
+                code: KeyCode::Right,
+                ..
+            }) => Some(println!("right\r")),
+            Event::Key(KeyEvent{
+                code: KeyCode::Up,
+                ..
+            }) => Some(println!("up\r")),
+            Event::Key(KeyEvent{
+                code: KeyCode::Down,
+                ..
+            }) => Some(println!("down\r")),
+            Event::Key(KeyEvent{
+                code: KeyCode::Char('c'),
+                modifiers: KeyModifiers::CONTROL,
+                ..
+            }) => None,
+            _ => Some(())
         }
     }
 

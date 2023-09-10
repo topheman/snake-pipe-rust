@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 use common::stream::process_io;
-use common::gamestate::hello;
+use common::gamestate::run as gamestate_run;
 
 
 #[derive(Parser)]
@@ -25,15 +25,15 @@ enum Commands {
 fn main() {
     let cli = Cli::parse();
 
+    println!("Hello, world!");
+    process_io();
     match &cli.command {
         Commands::Gamestate {throttle} => {
             println!("called gamestate with throttle: {throttle:?}");
-            hello();
+            let _ = gamestate_run();
         },
         Commands::Render => {
             println!("called render");
         },
     }
-    println!("Hello, world!");
-    process_io();
 }
