@@ -4,6 +4,7 @@ use crate::gamestate::physics::{Direction, Position};
 
 const INITIAL_SNAKE_TAIL_LENGTH: usize = 2;
 
+#[derive(Debug)]
 pub struct Snake {
     direction: Direction,
     head: Position,

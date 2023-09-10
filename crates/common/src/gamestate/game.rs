@@ -4,7 +4,8 @@ use rand::Rng;
 use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
 
-const FPS: f64 = 10.0;
+/// each 200ms
+const FPS: f64 = 0.005;
 // const RESTART_TIME: f64 = 1.0;
 
 fn fps_in_ms(fps: f64) -> f64 {
@@ -20,6 +21,7 @@ fn calc_random_pos(width: u32, height: u32) -> Position {
     }
 }
 
+#[derive(Debug)]
 pub struct Game {
     snake: Snake,
     fruit: Position,
@@ -60,7 +62,8 @@ impl Game {
     //     }
     // }
 
-    pub fn update(&mut self, delta_time: f64) {
+    /// returns true if the state has been updated because it was time to
+    pub fn update(&mut self, delta_time: f64) -> bool {
         self.waiting_time += delta_time;
 
         // if self.over {
@@ -86,7 +89,9 @@ impl Game {
             } else {
                 self.over = true;
             }
+            return true;
         }
+        return false;
     }
 
     pub fn key_down(&mut self, event: crossterm::event::Event) -> Option<()> {
@@ -99,28 +104,39 @@ impl Game {
         // }
 
         match event {
-            Event::Key(KeyEvent{
+            Event::Key(KeyEvent {
                 code: KeyCode::Left,
                 ..
-            }) => Some(println!("left\r")),
-            Event::Key(KeyEvent{
+            }) => {
+                self.snake.set_dir(Direction::Left);
+                Some(())
+            }
+            Event::Key(KeyEvent {
                 code: KeyCode::Right,
                 ..
-            }) => Some(println!("right\r")),
-            Event::Key(KeyEvent{
-                code: KeyCode::Up,
-                ..
-            }) => Some(println!("up\r")),
-            Event::Key(KeyEvent{
+            }) => {
+                self.snake.set_dir(Direction::Right);
+                Some(())
+            }
+            Event::Key(KeyEvent {
+                code: KeyCode::Up, ..
+            }) => {
+                self.snake.set_dir(Direction::Up);
+                Some(())
+            }
+            Event::Key(KeyEvent {
                 code: KeyCode::Down,
                 ..
-            }) => Some(println!("down\r")),
-            Event::Key(KeyEvent{
+            }) => {
+                self.snake.set_dir(Direction::Down);
+                Some(())
+            }
+            Event::Key(KeyEvent {
                 code: KeyCode::Char('c'),
                 modifiers: KeyModifiers::CONTROL,
                 ..
             }) => None,
-            _ => Some(())
+            _ => Some(()),
         }
     }
 
