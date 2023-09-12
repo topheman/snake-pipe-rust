@@ -30,7 +30,7 @@ pub fn run() -> std::io::Result<()> {
             }
         }
         if main.update(last_loop_duration.as_millis() as f64) {
-            println!("{:?}\r", main);
+            println!("{}\r", serde_json::to_string(&main).unwrap());
         }
         last_loop_duration = start.elapsed();
     }

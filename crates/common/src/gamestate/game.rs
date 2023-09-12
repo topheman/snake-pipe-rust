@@ -1,5 +1,6 @@
 use crossterm::event::KeyModifiers;
 use rand::Rng;
+use serde::Serialize;
 
 use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
@@ -21,11 +22,12 @@ fn calc_random_pos(width: u32, height: u32) -> Position {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Game {
     snake: Snake,
     fruit: Position,
     size: (u32, u32),
+    #[serde(skip)]
     waiting_time: f64,
     score: u32,
     over: bool,

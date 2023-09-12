@@ -1,14 +1,16 @@
+use serde::Serialize;
 use std::collections::LinkedList;
 
 use crate::gamestate::physics::{Direction, Position};
 
 const INITIAL_SNAKE_TAIL_LENGTH: usize = 2;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Snake {
     direction: Direction,
     head: Position,
     tail: LinkedList<Position>,
+    #[serde(skip)]
     updated_tail_pos: bool,
 }
 
