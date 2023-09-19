@@ -15,7 +15,7 @@ const HEIGHT: u32 = 25;
 pub fn run(options: InitOptions) -> std::io::Result<()> {
     enable_raw_mode()?; // https://docs.rs/crossterm/0.27.0/crossterm/terminal/index.html#raw-mode
     println!("{}\r", serde_json::to_string(&options).unwrap());
-    let mut main = game::Game::new(WIDTH, HEIGHT);
+    let mut main = game::Game::new(WIDTH, HEIGHT, options.frame_duration as f64);
     let mut last_loop_duration: Duration = Duration::new(0, 0);
     main.start();
     loop {

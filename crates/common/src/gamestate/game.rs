@@ -5,14 +5,6 @@ use serde::Serialize;
 use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
 
-/// each 200ms
-const FPS: f64 = 0.005;
-// const RESTART_TIME: f64 = 1.0;
-
-fn fps_in_ms(fps: f64) -> f64 {
-    1.0 / fps
-}
-
 fn calc_random_pos(width: u32, height: u32) -> Position {
     let mut rng = rand::thread_rng();
 
@@ -28,6 +20,8 @@ pub struct Game {
     fruit: Position,
     size: (u32, u32),
     #[serde(skip)]
+    frame_duration: f64,
+    #[serde(skip)]
     waiting_time: f64,
     score: u32,
     over: bool,
@@ -35,12 +29,13 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(width: u32, height: u32) -> Self {
+    pub fn new(width: u32, height: u32, frame_duration: f64) -> Self {
         // use fn defined at eof to calc random fruit / snake pos here
         Self {
             snake: Snake::new(calc_random_pos(width, height)),
             fruit: calc_random_pos(width, height),
             size: (width, height),
+            frame_duration,
             waiting_time: 0.0,
             score: 0,
             over: false,
@@ -75,7 +70,7 @@ impl Game {
         // return;
         // }
 
-        if self.waiting_time > fps_in_ms(FPS) && !self.over && !self.paused {
+        if self.waiting_time > self.frame_duration && !self.over && !self.paused {
             // self.check_colision() use snake.get_head_pos;
             self.waiting_time = 0.0;
 
