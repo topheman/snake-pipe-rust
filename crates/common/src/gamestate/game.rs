@@ -18,6 +18,7 @@ fn calc_random_pos(width: u32, height: u32) -> Position {
 pub struct Game {
     snake: Snake,
     fruit: Position,
+    #[serde(skip)]
     size: (u32, u32),
     #[serde(skip)]
     frame_duration: f64,
