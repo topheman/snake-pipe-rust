@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 
 use common::gamestate::run as gamestate_run;
+use common::render::run as render_run;
 use common::stream::{InitOptions, SizeOption};
 
 #[derive(Parser)]
@@ -92,8 +93,6 @@ fn main() {
 
             let _ = gamestate_run(game_options);
         }
-        Commands::Render => {
-            println!("called render");
-        }
+        Commands::Render => render_run(),
     }
 }
