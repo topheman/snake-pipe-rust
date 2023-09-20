@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::io::stdin;
+use std::io::{stdin, BufRead, Lines};
 
 // options
 
@@ -48,9 +48,32 @@ pub struct GameState {
     paused: bool,
 }
 
-pub fn parse_gamestate() {
-    let lines = stdin().lines();
-    for line in lines {
-        println!("got a line: {}\r", line.unwrap());
+/**
+ * Accepts the iterator from `stdin().lines()`
+ * - parses the first line into `option`
+ * - returns an iterator of the other lines in `lines` (already parsed)
+ */
+pub struct Stream {
+    pub options: InitOptions,
+    pub lines: Box<dyn Iterator<Item = GameState>>, // std::io::Lines<T>, //Lines<T>,
+}
+
+impl Stream {
+    fn new<T: BufRead + 'static>(mut lines: Lines<T>) -> Stream {
+        let first_line = lines.next().unwrap().unwrap();
+        let options: InitOptions = serde_json::from_str(&first_line).unwrap();
+        let parsed_lines = lines.map(|line| {
+            let parsed_line: GameState = serde_json::from_str(&line.unwrap().to_string()).unwrap();
+            parsed_line
+        });
+        Self {
+            options,
+            lines: Box::new(parsed_lines),
+        }
     }
+}
+
+pub fn parse_gamestate() -> Stream {
+    let lines = stdin().lines();
+    Stream::new(lines)
 }
