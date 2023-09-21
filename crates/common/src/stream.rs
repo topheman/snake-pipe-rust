@@ -34,18 +34,18 @@ pub struct Position {
 
 #[derive(Debug, Deserialize)]
 pub struct Snake {
-    direction: Direction,
-    head: Position,
-    tail: Vec<Position>,
+    pub direction: Direction,
+    pub head: Position,
+    pub tail: Vec<Position>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct GameState {
-    snake: Snake,
-    fruit: Position,
-    score: u32,
-    over: bool,
-    paused: bool,
+    pub snake: Snake,
+    pub fruit: Position,
+    pub score: u32,
+    pub over: bool,
+    pub paused: bool,
 }
 
 /**
