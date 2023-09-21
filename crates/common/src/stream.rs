@@ -59,21 +59,27 @@ pub struct Stream {
 }
 
 impl Stream {
-    fn new<T: BufRead + 'static>(mut lines: Lines<T>) -> Stream {
-        let first_line = lines.next().unwrap().unwrap();
-        let options: InitOptions = serde_json::from_str(&first_line).unwrap();
-        let parsed_lines = lines.map(|line| {
-            let parsed_line: GameState = serde_json::from_str(&line.unwrap().to_string()).unwrap();
-            parsed_line
+    fn new<T: BufRead + 'static>(
+        mut lines: Lines<T>,
+    ) -> Result<Stream, Box<dyn std::error::Error>> {
+        let first_line = lines.next().unwrap()?;
+        let options: InitOptions = serde_json::from_str(&first_line)?;
+        // flat_map keeps Some and extracts their values while removing Err
+        let parsed_lines = lines.flat_map(|result_line| match result_line {
+            Ok(line) => {
+                let parsed_line: GameState = serde_json::from_str(&line).unwrap();
+                Some(parsed_line)
+            }
+            Err(_) => None,
         });
-        Self {
+        Ok(Self {
             options,
             lines: Box::new(parsed_lines),
-        }
+        })
     }
 }
 
-pub fn parse_gamestate() -> Stream {
+pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
     let lines = stdin().lines();
     Stream::new(lines)
 }
