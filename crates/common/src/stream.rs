@@ -64,12 +64,12 @@ impl Stream {
     ) -> Result<Stream, Box<dyn std::error::Error>> {
         let first_line = lines.next().unwrap()?;
         let options: InitOptions = serde_json::from_str(&first_line)?;
-        // flat_map keeps Some and extracts their values while removing Err
+        // flat_map keeps Some and extracts their values while removing Err - we ignore parse errors on lines / we dont panic on it
         let parsed_lines = lines.flat_map(|result_line| match result_line {
-            Ok(line) => {
-                let parsed_line: GameState = serde_json::from_str(&line).unwrap();
-                Some(parsed_line)
-            }
+            Ok(line) => match serde_json::from_str::<GameState>(&line) {
+                Ok(parsed_line) => Some(parsed_line),
+                Err(_) => None,
+            },
             Err(_) => None,
         });
         Ok(Self {
