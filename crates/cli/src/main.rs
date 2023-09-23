@@ -3,6 +3,7 @@ use clap::{Parser, Subcommand};
 use common::gamestate::run as gamestate_run;
 use common::render::run as render_run;
 use common::stream::{InitOptions, SizeOption};
+use common::throttle::run as throttle_run;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -31,6 +32,11 @@ enum Commands {
         fit_terminal: bool,
     },
     Render,
+    Throttle {
+        /// in ms
+        #[arg(long, default_value_t = 200)]
+        frame_duration: u32,
+    },
 }
 
 struct CliOptions<'a> {
@@ -94,5 +100,6 @@ fn main() {
             let _ = gamestate_run(game_options);
         }
         Commands::Render => render_run(),
+        Commands::Throttle { frame_duration } => throttle_run(*frame_duration),
     }
 }

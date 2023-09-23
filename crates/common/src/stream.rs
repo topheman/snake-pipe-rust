@@ -3,13 +3,13 @@ use std::io::{stdin, BufRead, Lines};
 
 // options
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SizeOption {
     pub width: u32,
     pub height: u32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct InitOptions {
     pub frame_duration: u32,

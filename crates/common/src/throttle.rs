@@ -1,0 +1,38 @@
+use std::time::{Duration, Instant};
+
+use crate::stream::parse_gamestate;
+
+const FRAME_ACCURACY: Duration = Duration::from_millis(20);
+
+pub fn run(frame_duration: u32) {
+    let frame_duration_millis = Duration::from_millis(frame_duration as u64);
+    match parse_gamestate() {
+        Ok(mut stream) => {
+            let mut options_passthrough = stream.options.clone();
+            options_passthrough.frame_duration = frame_duration;
+            println!("options: {:?}\r", options_passthrough);
+            let mut last_loop_duration: Duration = Duration::new(0, 0);
+            loop {
+                let start = Instant::now();
+                while start.elapsed() < FRAME_ACCURACY {
+                    std::hint::spin_loop();
+                }
+                if last_loop_duration > frame_duration_millis {
+                    if let Some(parsed_line) = stream.lines.next() {
+                        println!("state: {:?} {:?}\r", last_loop_duration, parsed_line);
+                        // adjust framerate
+                        let remainder = last_loop_duration - frame_duration_millis;
+                        last_loop_duration = remainder;
+                    } else {
+                        std::process::exit(0);
+                    }
+                }
+                last_loop_duration += start.elapsed();
+            }
+        }
+        Err(e) => {
+            eprintln!("Error occurred while parsing stdin: \"{}\"", e);
+            std::process::exit(1);
+        }
+    }
+}
