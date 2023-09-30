@@ -1,5 +1,7 @@
 use std::time::{Duration, Instant};
 
+use serde_json::to_string;
+
 use crate::stream::parse_gamestate;
 
 const FRAME_ACCURACY: Duration = Duration::from_millis(20);
@@ -10,7 +12,7 @@ pub fn run(frame_duration: u32) {
         Ok(mut stream) => {
             let mut options_passthrough = stream.options.clone();
             options_passthrough.frame_duration = frame_duration;
-            println!("options: {:?}\r", options_passthrough);
+            println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
             let mut last_loop_duration: Duration = Duration::new(0, 0);
             loop {
                 let start = Instant::now();
@@ -19,7 +21,7 @@ pub fn run(frame_duration: u32) {
                 }
                 if last_loop_duration > frame_duration_millis {
                     if let Some(parsed_line) = stream.lines.next() {
-                        println!("state: {:?} {:?}\r", last_loop_duration, parsed_line);
+                        println!("{}\r", serde_json::to_string(&parsed_line).unwrap());
                         // adjust framerate
                         let remainder = last_loop_duration - frame_duration_millis;
                         last_loop_duration = remainder;

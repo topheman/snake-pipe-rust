@@ -18,7 +18,7 @@ pub struct InitOptions {
 
 // gamestate
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum Direction {
     Up,
     Right,
@@ -26,20 +26,20 @@ pub enum Direction {
     Left,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Snake {
     pub direction: Direction,
     pub head: Position,
     pub tail: Vec<Position>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct GameState {
     pub snake: Snake,
     pub fruit: Position,
