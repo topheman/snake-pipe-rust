@@ -1,11 +1,60 @@
-use crate::stream::{parse_gamestate, GameState};
+use crate::stream::{parse_gamestate, Direction as StreamDirection, GameState, InitOptions};
+use array2d::Array2D;
+
+#[derive(Clone, Debug)]
+enum Direction {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
+impl From<StreamDirection> for Direction {
+    fn from(value: StreamDirection) -> Self {
+        match value {
+            StreamDirection::Up => Direction::Up,
+            StreamDirection::Down => Direction::Down,
+            StreamDirection::Left => Direction::Left,
+            StreamDirection::Right => Direction::Right,
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+enum Point {
+    Head(Direction),
+    Tail,
+    Fruit,
+    Nothing,
+}
+
+#[derive(Debug)]
+struct RenderGrid {
+    data: Array2D<Point>,
+}
+
+impl RenderGrid {
+    fn new(width: u32, height: u32) -> Self {
+        RenderGrid {
+            data: Array2D::filled_with(Point::Nothing, width as usize, height as usize),
+        }
+    }
+    fn set(&mut self, x: usize, y: usize, point: Point) {
+        let _ = self.data.set(x, y, point);
+    }
+}
 
 pub fn run() {
     match parse_gamestate() {
         Ok(stream) => {
-            println!("options: {:?}\r", stream.options);
+            println!("{:?}\n", &stream.options);
             for parsed_line in stream.lines {
-                println!("state: {:?}\r", parsed_line);
+                let mut grid =
+                    RenderGrid::new(stream.options.size.width, stream.options.size.height);
+                // println!("{:?}", &parsed_line);
+                prepare_grid(&mut grid, parsed_line);
+                // println!("{:?}", &grid);
+                render_frame(&stream.options, &grid);
             }
         }
         Err(e) => {
@@ -14,6 +63,34 @@ pub fn run() {
     }
 }
 
-fn render_frame(state: GameState) {
-    println!("{:?}\r", state);
+fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
+    let direction: Direction = game_state.snake.direction.into();
+    grid.set(
+        game_state.snake.head.x as usize,
+        game_state.snake.head.y as usize,
+        Point::Head(direction),
+    );
+    game_state.snake.tail.into_iter().for_each(|f| {
+        grid.set(f.x as usize, f.y as usize, Point::Tail);
+    });
+    grid.set(
+        game_state.fruit.x as usize,
+        game_state.fruit.y as usize,
+        Point::Fruit,
+    );
+}
+
+fn render_frame(options: &InitOptions, grid: &RenderGrid) {
+    grid.data.rows_iter().for_each(|row| {
+        let row_reduced: String = row.into_iter().fold("".to_string(), |acc, cell| {
+            let cell_content = match cell {
+                Point::Fruit => "F",
+                Point::Head(_) => "H",
+                Point::Nothing => " ",
+                Point::Tail => "T",
+            };
+            format!("{}{}", acc, cell_content)
+        });
+        println!("{}\r", row_reduced);
+    });
 }
