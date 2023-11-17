@@ -1,4 +1,4 @@
-use crate::stream::{parse_gamestate, Direction as StreamDirection, GameState, InitOptions};
+use crate::stream::{parse_gamestate, Direction as StreamDirection, GameState};
 use array2d::Array2D;
 
 #[derive(Clone, Debug)]
@@ -54,7 +54,8 @@ pub fn run() {
                 // println!("{:?}", &parsed_line);
                 prepare_grid(&mut grid, parsed_line);
                 // println!("{:?}", &grid);
-                render_frame(&stream.options, &grid);
+                let frame = render_frame(&grid);
+                println!("{}", frame);
             }
         }
         Err(e) => {
@@ -80,17 +81,18 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
     );
 }
 
-fn render_frame(options: &InitOptions, grid: &RenderGrid) {
-    grid.data.rows_iter().for_each(|row| {
-        let row_reduced: String = row.into_iter().fold("".to_string(), |acc, cell| {
+fn render_frame(grid: &RenderGrid) -> String {
+    let output = grid.data.rows_iter().fold("".to_string(), |acc, row| {
+        let row_reduced: String = row.into_iter().fold("".to_string(), |row_acc, cell| {
             let cell_content = match cell {
                 Point::Fruit => "F",
                 Point::Head(_) => "H",
                 Point::Nothing => " ",
                 Point::Tail => "T",
             };
-            format!("{}{}", acc, cell_content)
+            format!("{}{}", row_acc, cell_content)
         });
-        println!("{}\r", row_reduced);
+        return format!("{}{}\n", acc, row_reduced);
     });
+    return output;
 }
