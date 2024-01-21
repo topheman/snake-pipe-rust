@@ -1,7 +1,5 @@
 use std::time::{Duration, Instant};
 
-use serde_json::to_string;
-
 use crate::stream::parse_gamestate;
 
 const FRAME_ACCURACY: Duration = Duration::from_millis(20);

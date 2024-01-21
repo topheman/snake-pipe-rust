@@ -51,14 +51,24 @@ pub fn run() {
     match parse_gamestate() {
         Ok(stream) => {
             println!("{:?}\n", &stream.options);
+            let mut stdout = std::io::stdout();
+            queue!(
+                stdout,
+                terminal::Clear(terminal::ClearType::All),
+                cursor::Hide, // todo - unhide on stop
+                cursor::MoveTo(0, 0),
+                cursor::SavePosition,
+            )
+            .unwrap();
             for parsed_line in stream.lines {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
                 // println!("{:?}", &parsed_line);
                 prepare_grid(&mut grid, parsed_line);
                 // println!("{:?}", &grid);
-                render_frame(&grid);
+                render_frame(&grid, &mut stdout);
                 // print_frame(frame);
+                stdout.flush().unwrap();
             }
         }
         Err(e) => {
@@ -84,15 +94,8 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
     );
 }
 
-fn render_frame(grid: &RenderGrid) {
-    queue!(
-        std::io::stdout(),
-        terminal::Clear(terminal::ClearType::All),
-        cursor::Hide, // todo - unhide on stop
-        cursor::MoveTo(0, 0),
-    )
-    .unwrap(); // todo handle error
-
+fn render_frame(grid: &RenderGrid, stdout: &mut std::io::Stdout) {
+    queue!(stdout, cursor::RestorePosition).unwrap();
     grid.data.rows_iter().for_each(|row| {
         let row_reduced: String = row.into_iter().fold("".to_string(), |row_acc, cell| {
             let cell_content = match cell {
@@ -103,23 +106,6 @@ fn render_frame(grid: &RenderGrid) {
             };
             format!("{}{}", row_acc, cell_content)
         });
-        queue!(
-            std::io::stdout(),
-            style::Print(row_reduced),
-            cursor::MoveToNextLine(1)
-        )
-        .unwrap(); // todo handle error
-        std::io::stdout().flush().unwrap();
+        queue!(stdout, style::Print(row_reduced), cursor::MoveToNextLine(1)).unwrap();
     });
-}
-
-fn print_frame(frame: String) {
-    queue!(
-        std::io::stdout(),
-        terminal::Clear(terminal::ClearType::All),
-        cursor::Hide, // todo - unhide on stop
-        cursor::MoveTo(0, 0),
-        style::Print(frame),
-    )
-    .unwrap(); // todo handle error
 }
