@@ -106,27 +106,27 @@ impl Game {
                 code: KeyCode::Left,
                 ..
             }) => {
-                self.snake.set_dir(Direction::Left);
+                self.snake.set_dir(Direction::Up);
                 Some(())
             }
             Event::Key(KeyEvent {
                 code: KeyCode::Right,
                 ..
             }) => {
-                self.snake.set_dir(Direction::Right);
+                self.snake.set_dir(Direction::Down);
                 Some(())
             }
             Event::Key(KeyEvent {
                 code: KeyCode::Up, ..
             }) => {
-                self.snake.set_dir(Direction::Up);
+                self.snake.set_dir(Direction::Left);
                 Some(())
             }
             Event::Key(KeyEvent {
                 code: KeyCode::Down,
                 ..
             }) => {
-                self.snake.set_dir(Direction::Down);
+                self.snake.set_dir(Direction::Right);
                 Some(())
             }
             Event::Key(KeyEvent {

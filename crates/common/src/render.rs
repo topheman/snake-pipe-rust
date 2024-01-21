@@ -1,5 +1,8 @@
+use std::io::Write;
+
 use crate::stream::{parse_gamestate, Direction as StreamDirection, GameState};
 use array2d::Array2D;
+use crossterm::{cursor, queue, style, terminal};
 
 #[derive(Clone, Debug)]
 enum Direction {
@@ -54,8 +57,8 @@ pub fn run() {
                 // println!("{:?}", &parsed_line);
                 prepare_grid(&mut grid, parsed_line);
                 // println!("{:?}", &grid);
-                let frame = render_frame(&grid);
-                println!("{}", frame);
+                render_frame(&grid);
+                // print_frame(frame);
             }
         }
         Err(e) => {
@@ -81,8 +84,16 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
     );
 }
 
-fn render_frame(grid: &RenderGrid) -> String {
-    let output = grid.data.rows_iter().fold("".to_string(), |acc, row| {
+fn render_frame(grid: &RenderGrid) {
+    queue!(
+        std::io::stdout(),
+        terminal::Clear(terminal::ClearType::All),
+        cursor::Hide, // todo - unhide on stop
+        cursor::MoveTo(0, 0),
+    )
+    .unwrap(); // todo handle error
+
+    grid.data.rows_iter().for_each(|row| {
         let row_reduced: String = row.into_iter().fold("".to_string(), |row_acc, cell| {
             let cell_content = match cell {
                 Point::Fruit => "F",
@@ -92,7 +103,23 @@ fn render_frame(grid: &RenderGrid) -> String {
             };
             format!("{}{}", row_acc, cell_content)
         });
-        return format!("{}{}\n", acc, row_reduced);
+        queue!(
+            std::io::stdout(),
+            style::Print(row_reduced),
+            cursor::MoveToNextLine(1)
+        )
+        .unwrap(); // todo handle error
+        std::io::stdout().flush().unwrap();
     });
-    return output;
+}
+
+fn print_frame(frame: String) {
+    queue!(
+        std::io::stdout(),
+        terminal::Clear(terminal::ClearType::All),
+        cursor::Hide, // todo - unhide on stop
+        cursor::MoveTo(0, 0),
+        style::Print(frame),
+    )
+    .unwrap(); // todo handle error
 }
