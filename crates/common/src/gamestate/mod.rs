@@ -5,12 +5,15 @@ pub mod snake;
 use std::time::{Duration, Instant};
 
 use crossterm::event::{poll, read};
-use crossterm::terminal::{disable_raw_mode, enable_raw_mode};
 
 use crate::stream::InitOptions;
 
+/**
+ * This function is the update loop.
+ * It keeps track of the user inputs via the keyboard.
+ * It runs forever and returns if ctrl+c is hit.
+ */
 pub fn run(options: InitOptions) -> std::io::Result<()> {
-    enable_raw_mode()?; // https://docs.rs/crossterm/0.27.0/crossterm/terminal/index.html#raw-mode
     println!("{}\r", serde_json::to_string(&options).unwrap());
     let mut main = game::Game::new(
         options.size.width,
@@ -24,8 +27,8 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
         if poll(Duration::from_millis(20))? {
             let event = read()?;
 
+            // return Ok(()) when ctrl+c is hit
             if let None = main.key_down(event) {
-                disable_raw_mode()?;
                 return Ok(());
             }
         }

@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use crossterm;
 
 use common::gamestate::run as gamestate_run;
 use common::render::run as render_run;
@@ -97,9 +98,14 @@ fn main() {
             };
             let game_options: InitOptions = cli_options.into();
 
-            let _ = gamestate_run(game_options);
+            // enable_raw_mode()?; // https://docs.rs/crossterm/0.27.0/crossterm/terminal/index.html#raw-mode
+            let _ = crossterm::terminal::enable_raw_mode();
+            let _ = gamestate_run(game_options); // this function returns when ctrl+c is hit
+            let _ = crossterm::terminal::disable_raw_mode();
         }
-        Commands::Render => render_run(),
+        Commands::Render => {
+            render_run();
+        }
         Commands::Throttle { frame_duration } => throttle_run(*frame_duration),
     }
 }

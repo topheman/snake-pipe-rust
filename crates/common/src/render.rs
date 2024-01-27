@@ -55,7 +55,7 @@ pub fn run() {
             queue!(
                 stdout,
                 terminal::Clear(terminal::ClearType::All),
-                cursor::Hide, // todo - unhide on stop
+                cursor::Hide,
                 cursor::MoveTo(0, 0),
                 cursor::SavePosition,
             )
@@ -63,13 +63,12 @@ pub fn run() {
             for parsed_line in stream.lines {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
-                // println!("{:?}", &parsed_line);
                 prepare_grid(&mut grid, parsed_line);
-                // println!("{:?}", &grid);
                 render_frame(&grid, &mut stdout);
-                // print_frame(frame);
                 stdout.flush().unwrap();
             }
+            // once there is no more stream (maybe ctrl-c), show the cursor back
+            queue!(stdout, cursor::Show,).unwrap();
         }
         Err(e) => {
             println!("Error occurred while parsing stdin: \"{}\"", e);
