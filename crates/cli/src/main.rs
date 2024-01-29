@@ -21,7 +21,7 @@ const DEFAULT_HEIGHT: u32 = 25;
 enum Commands {
     Gamestate {
         /// in ms
-        #[arg(long, default_value_t = 200)]
+        #[arg(long, default_value_t = 120)]
         frame_duration: u32,
         /// default 25
         #[arg(long)]
@@ -35,7 +35,7 @@ enum Commands {
     Render,
     Throttle {
         /// in ms
-        #[arg(long, default_value_t = 200)]
+        #[arg(long, default_value_t = 120)]
         frame_duration: u32,
     },
 }
