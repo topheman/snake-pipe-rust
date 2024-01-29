@@ -18,7 +18,7 @@ pub struct InitOptions {
 
 // gamestate
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Direction {
     Up,
@@ -27,13 +27,13 @@ pub enum Direction {
     Left,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Snake {
     pub direction: Direction,
     pub head: Position,
@@ -48,7 +48,7 @@ pub enum GameState {
     Running,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Game {
     pub snake: Snake,
     pub fruit: Position,

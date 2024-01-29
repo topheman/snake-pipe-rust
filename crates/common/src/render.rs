@@ -63,8 +63,13 @@ pub fn run() {
             for parsed_line in stream.lines {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
-                prepare_grid(&mut grid, parsed_line);
-                render_frame(&grid, stream.options.size.width, &mut stdout);
+                prepare_grid(&mut grid, parsed_line.clone());
+                render_frame(
+                    &grid,
+                    stream.options.size.width,
+                    parsed_line.score.clone(),
+                    &mut stdout,
+                );
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
@@ -106,7 +111,7 @@ fn render_line_wrapper(width: u32, top: bool) -> String {
     }
 }
 
-fn render_frame(grid: &RenderGrid, width: u32, stdout: &mut std::io::Stdout) {
+fn render_frame(grid: &RenderGrid, width: u32, score: u32, stdout: &mut std::io::Stdout) {
     queue!(
         stdout,
         cursor::RestorePosition,
@@ -131,5 +136,11 @@ fn render_frame(grid: &RenderGrid, width: u32, stdout: &mut std::io::Stdout) {
         )
         .unwrap();
     });
-    queue!(stdout, style::Print(render_line_wrapper(width, false))).unwrap();
+    queue!(
+        stdout,
+        style::Print(render_line_wrapper(width, false)),
+        cursor::MoveToNextLine(1),
+        style::Print(format!("Score: {}", score)),
+    )
+    .unwrap();
 }
