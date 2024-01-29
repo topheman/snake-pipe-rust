@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use crate::stream::{parse_gamestate, Direction as StreamDirection, GameState};
+use crate::stream::{parse_gamestate, Direction as StreamDirection, Game};
 use array2d::Array2D;
 use crossterm::{cursor, queue, style, terminal};
 
@@ -76,7 +76,7 @@ pub fn run() {
     }
 }
 
-fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
+fn prepare_grid(grid: &mut RenderGrid, game_state: Game) {
     let direction: Direction = game_state.snake.direction.into();
     grid.set(
         game_state.snake.head.x as usize,

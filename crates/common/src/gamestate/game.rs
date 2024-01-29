@@ -14,6 +14,14 @@ fn calc_random_pos(width: u32, height: u32) -> Position {
     }
 }
 
+#[derive(Debug, Serialize, PartialEq, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum GameState {
+    Paused,
+    Over,
+    Running,
+}
+
 #[derive(Debug, Serialize)]
 pub struct Game {
     snake: Snake,
@@ -25,8 +33,7 @@ pub struct Game {
     #[serde(skip)]
     waiting_time: f64,
     score: u32,
-    over: bool,
-    paused: bool,
+    pub state: GameState,
 }
 
 impl Game {
@@ -39,17 +46,20 @@ impl Game {
             frame_duration,
             waiting_time: 0.0,
             score: 0,
-            over: false,
-            paused: true,
+            state: GameState::Paused,
         }
     }
 
     pub fn start(&mut self) {
-        self.paused = false;
+        self.state = GameState::Running;
     }
 
     pub fn pause(&mut self) {
-        self.paused = true;
+        self.state = GameState::Paused;
+    }
+
+    pub fn resume(&mut self) {
+        self.state = GameState::Running;
     }
 
     // pub fn toggle_game_state(&mut self) {
@@ -71,9 +81,13 @@ impl Game {
         // return;
         // }
 
-        if self.waiting_time > self.frame_duration && !self.over && !self.paused {
+        if self.waiting_time > self.frame_duration && self.state != GameState::Over {
             // self.check_colision() use snake.get_head_pos;
             self.waiting_time = 0.0;
+
+            if self.state == GameState::Paused || self.state == GameState::Over {
+                return true;
+            }
 
             if !self.snake.is_tail_overlapping() && !self.snake.will_tail_overlapp() {
                 self.snake.update(self.size.0, self.size.1);
@@ -85,7 +99,7 @@ impl Game {
                     self.calc_score();
                 }
             } else {
-                self.over = true;
+                self.state = GameState::Over;
             }
             return true;
         }
@@ -102,6 +116,17 @@ impl Game {
         // }
 
         match event {
+            Event::Key(KeyEvent {
+                code: KeyCode::Char('p'),
+                ..
+            }) => {
+                if self.state != GameState::Paused {
+                    self.pause();
+                } else {
+                    self.resume();
+                }
+                Some(())
+            }
             Event::Key(KeyEvent {
                 code: KeyCode::Left,
                 ..

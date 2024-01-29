@@ -19,6 +19,7 @@ pub struct InitOptions {
 // gamestate
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Direction {
     Up,
     Right,
@@ -39,13 +40,20 @@ pub struct Snake {
     pub tail: Vec<Position>,
 }
 
+#[derive(Debug, Deserialize, Serialize, PartialEq, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum GameState {
+    Paused,
+    Over,
+    Running,
+}
+
 #[derive(Debug, Deserialize, Serialize)]
-pub struct GameState {
+pub struct Game {
     pub snake: Snake,
     pub fruit: Position,
     pub score: u32,
-    pub over: bool,
-    pub paused: bool,
+    pub state: GameState,
 }
 
 /**
@@ -55,7 +63,7 @@ pub struct GameState {
  */
 pub struct Stream {
     pub options: InitOptions,
-    pub lines: Box<dyn Iterator<Item = GameState>>, // std::io::Lines<T>, //Lines<T>,
+    pub lines: Box<dyn Iterator<Item = Game>>, // std::io::Lines<T>, //Lines<T>,
 }
 
 impl Stream {
@@ -66,7 +74,7 @@ impl Stream {
         let options: InitOptions = serde_json::from_str(&first_line)?;
         // flat_map keeps Some and extracts their values while removing Err - we ignore parse errors on lines / we dont panic on it
         let parsed_lines = lines.flat_map(|result_line| match result_line {
-            Ok(line) => match serde_json::from_str::<GameState>(&line) {
+            Ok(line) => match serde_json::from_str::<Game>(&line) {
                 Ok(parsed_line) => Some(parsed_line),
                 Err(_) => None,
             },

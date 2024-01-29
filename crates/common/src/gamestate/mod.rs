@@ -6,6 +6,7 @@ use std::time::{Duration, Instant};
 
 use crossterm::event::{poll, read};
 
+use crate::gamestate::game::GameState;
 use crate::stream::InitOptions;
 
 /**
@@ -22,6 +23,7 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
     );
     let mut last_loop_duration: Duration = Duration::new(0, 0);
     main.start();
+    let mut prev_state = main.state.clone();
     loop {
         let start = Instant::now();
         if poll(Duration::from_millis(20))? {
@@ -33,7 +35,13 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
             }
         }
         if main.update(last_loop_duration.as_millis() as f64) {
-            println!("{}\r", serde_json::to_string(&main).unwrap());
+            if main.state == GameState::Running
+                || main.state == GameState::Over
+                || main.state == GameState::Paused && prev_state == GameState::Running
+            {
+                println!("{}\r", serde_json::to_string(&main).unwrap());
+            }
+            prev_state = main.state.clone();
         }
         last_loop_duration = start.elapsed();
     }

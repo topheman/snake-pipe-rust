@@ -18,6 +18,7 @@ impl Position {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Direction {
     Up,
     Right,
