@@ -68,7 +68,7 @@ pub fn run() {
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
-            queue!(stdout, cursor::Show,).unwrap();
+            queue!(stdout, cursor::Show, cursor::RestorePosition,).unwrap();
         }
         Err(e) => {
             println!("Error occurred while parsing stdin: \"{}\"", e);
