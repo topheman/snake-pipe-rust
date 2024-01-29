@@ -64,7 +64,7 @@ pub fn run() {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
                 prepare_grid(&mut grid, parsed_line);
-                render_frame(&grid, &mut stdout);
+                render_frame(&grid, stream.options.size.width, &mut stdout);
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
@@ -93,18 +93,43 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: GameState) {
     );
 }
 
-fn render_frame(grid: &RenderGrid, stdout: &mut std::io::Stdout) {
-    queue!(stdout, cursor::RestorePosition).unwrap();
+/**
+ * https://en.wikipedia.org/wiki/Box-drawing_character
+ */
+fn render_line_wrapper(width: u32, top: bool) -> String {
+    let line = (0..width)
+        .into_iter()
+        .fold("".to_string(), |acc, _| format!("{}{}", acc, "-"));
+    match top {
+        true => format!("{}{}{}", "\u{250C}", line, "\u{2510}"),
+        false => format!("{}{}{}", "\u{2514}", line, "\u{2518}"),
+    }
+}
+
+fn render_frame(grid: &RenderGrid, width: u32, stdout: &mut std::io::Stdout) {
+    queue!(
+        stdout,
+        cursor::RestorePosition,
+        style::Print(render_line_wrapper(width, true)),
+        cursor::MoveToNextLine(1)
+    )
+    .unwrap();
     grid.data.rows_iter().for_each(|row| {
         let row_reduced: String = row.into_iter().fold("".to_string(), |row_acc, cell| {
             let cell_content = match cell {
                 Point::Fruit => "F",
                 Point::Head(_) => "H",
-                Point::Nothing => " ",
+                Point::Nothing => "·",
                 Point::Tail => "T",
             };
             format!("{}{}", row_acc, cell_content)
         });
-        queue!(stdout, style::Print(row_reduced), cursor::MoveToNextLine(1)).unwrap();
+        queue!(
+            stdout,
+            style::Print(format!("│{}│", row_reduced)),
+            cursor::MoveToNextLine(1)
+        )
+        .unwrap();
     });
+    queue!(stdout, style::Print(render_line_wrapper(width, false))).unwrap();
 }
