@@ -5,7 +5,8 @@ use serde::Serialize;
 use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
 
-fn calc_random_pos(width: u32, height: u32) -> Position {
+fn calc_random_pos(height: u32, width: u32) -> Position {
+    // todo check inverted params
     let mut rng = rand::thread_rng();
 
     Position {
@@ -90,7 +91,7 @@ impl Game {
             }
 
             if !self.snake.is_tail_overlapping() && !self.snake.will_tail_overlapp() {
-                self.snake.update(self.size.0, self.size.1);
+                self.snake.update(self.size.0, self.size.1); // todo check inverted params
 
                 if *self.snake.get_head_pos() == self.fruit {
                     self.snake.grow();
@@ -131,7 +132,7 @@ impl Game {
                 code: KeyCode::Left,
                 ..
             }) => {
-                self.snake.set_dir(Direction::Up);
+                self.snake.set_dir(Direction::Up); // todo review directions
                 Some(())
             }
             Event::Key(KeyEvent {

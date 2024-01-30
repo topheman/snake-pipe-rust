@@ -40,7 +40,8 @@ impl Snake {
     // pub fn grow(&mut self, x: u32, y: u32) {
     //     self.tail.push_back(Position { x, y })
     // }
-    pub fn update(&mut self, width: u32, height: u32) {
+    pub fn update(&mut self, height: u32, width: u32) {
+        // todo check inverted params
         if self.tail.len() > 0 {
             self.tail.push_front(self.head.clone());
             self.tail.pop_back();

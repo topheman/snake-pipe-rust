@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::io::Write;
 
 use crate::stream::{parse_gamestate, Direction as StreamDirection, Game};
@@ -39,7 +40,7 @@ struct RenderGrid {
 impl RenderGrid {
     fn new(width: u32, height: u32) -> Self {
         RenderGrid {
-            data: Array2D::filled_with(Point::Nothing, width as usize, height as usize),
+            data: Array2D::filled_with(Point::Nothing, height as usize, width as usize),
         }
     }
     fn set(&mut self, x: usize, y: usize, point: Point) {
@@ -141,6 +142,12 @@ fn render_frame(grid: &RenderGrid, width: u32, score: u32, stdout: &mut std::io:
         style::Print(render_line_wrapper(width, false)),
         cursor::MoveToNextLine(1),
         style::Print(format!("Score: {}", score)),
+        cursor::MoveToNextLine(1),
+        style::Print(format!(
+            "{:^0width$}",
+            "SOME MESSAGE",
+            width = width as usize
+        )),
     )
     .unwrap();
 }
