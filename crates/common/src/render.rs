@@ -1,4 +1,3 @@
-use std::fmt::Display;
 use std::io::Write;
 
 use crate::stream::{parse_gamestate, Direction as StreamDirection, Game};
