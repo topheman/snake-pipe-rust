@@ -5,7 +5,7 @@ use serde::Serialize;
 use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
 
-fn calc_random_pos(height: u32, width: u32) -> Position {
+fn calc_random_pos(width: u32, height: u32) -> Position {
     // todo check inverted params
     let mut rng = rand::thread_rng();
 

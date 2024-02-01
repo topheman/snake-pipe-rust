@@ -43,7 +43,7 @@ impl RenderGrid {
         }
     }
     fn set(&mut self, x: usize, y: usize, point: Point) {
-        let _ = self.data.set(x, y, point);
+        let _ = self.data.set(y, x, point);
     }
 }
 
@@ -111,8 +111,12 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: Game, stdout: &mut std::io::S
         stdout,
         cursor::MoveToNextLine(1),
         style::Print(format!(
-            "x: {} - y: {} - direction: {:#?}",
-            game_state.snake.head.x, game_state.snake.head.y, direction
+            "x: {} - y: {} - direction: {:#?} - fruit - x: {} - y: {}",
+            game_state.snake.head.x,
+            game_state.snake.head.y,
+            direction,
+            game_state.fruit.x,
+            game_state.fruit.y
         )),
     )
     .unwrap();
