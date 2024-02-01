@@ -50,7 +50,7 @@ impl RenderGrid {
 pub fn run() {
     match parse_gamestate() {
         Ok(stream) => {
-            println!("{:?}\n", &stream.options);
+            // println!("{:?}\n", &stream.options);
             let mut stdout = std::io::stdout();
             queue!(
                 stdout,
