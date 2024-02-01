@@ -63,13 +63,23 @@ pub fn run() {
             for parsed_line in stream.lines {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
-                prepare_grid(&mut grid, parsed_line.clone());
+                prepare_grid(&mut grid, parsed_line.clone(), &mut stdout);
                 render_frame(
                     &grid,
                     stream.options.size.width,
                     parsed_line.score.clone(),
                     &mut stdout,
                 );
+                queue!(
+                    stdout,
+                    cursor::MoveToNextLine(1),
+                    style::Print(format!(
+                        "rows: {} - colums: {}",
+                        grid.data.num_rows(),
+                        grid.data.num_columns()
+                    )),
+                )
+                .unwrap();
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
@@ -81,12 +91,12 @@ pub fn run() {
     }
 }
 
-fn prepare_grid(grid: &mut RenderGrid, game_state: Game) {
+fn prepare_grid(grid: &mut RenderGrid, game_state: Game, stdout: &mut std::io::Stdout) {
     let direction: Direction = game_state.snake.direction.into();
     grid.set(
         game_state.snake.head.x as usize,
         game_state.snake.head.y as usize,
-        Point::Head(direction),
+        Point::Head(direction.clone()),
     );
     game_state.snake.tail.into_iter().for_each(|f| {
         grid.set(f.x as usize, f.y as usize, Point::Tail);
@@ -96,6 +106,16 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: Game) {
         game_state.fruit.y as usize,
         Point::Fruit,
     );
+    // for debugging purposes - x/y are not aligned with number of rows/colums
+    queue!(
+        stdout,
+        cursor::MoveToNextLine(1),
+        style::Print(format!(
+            "x: {} - y: {} - direction: {:#?}",
+            game_state.snake.head.x, game_state.snake.head.y, direction
+        )),
+    )
+    .unwrap();
 }
 
 /**
