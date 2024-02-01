@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use std::io::{stdin, BufRead, Lines};
 
 // options
@@ -46,6 +47,17 @@ pub enum GameState {
     Paused,
     Over,
     Running,
+}
+
+impl fmt::Display for GameState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let str = match self {
+            Self::Over => "Game Over",
+            Self::Paused => "Paused",
+            Self::Running => "Running",
+        };
+        write!(f, "{}", str)
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

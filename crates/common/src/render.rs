@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use crate::stream::{parse_gamestate, Direction as StreamDirection, Game};
+use crate::stream::{parse_gamestate, Direction as StreamDirection, Game, GameState};
 use array2d::Array2D;
 use crossterm::{cursor, queue, style, terminal};
 
@@ -63,23 +63,14 @@ pub fn run() {
             for parsed_line in stream.lines {
                 let mut grid =
                     RenderGrid::new(stream.options.size.width, stream.options.size.height);
-                prepare_grid(&mut grid, parsed_line.clone(), &mut stdout);
+                prepare_grid(&mut grid, parsed_line.clone());
                 render_frame(
                     &grid,
                     stream.options.size.width,
-                    parsed_line.score.clone(),
+                    parsed_line.score,
+                    parsed_line.state,
                     &mut stdout,
                 );
-                queue!(
-                    stdout,
-                    cursor::MoveToNextLine(1),
-                    style::Print(format!(
-                        "rows: {} - colums: {}",
-                        grid.data.num_rows(),
-                        grid.data.num_columns()
-                    )),
-                )
-                .unwrap();
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
@@ -91,7 +82,7 @@ pub fn run() {
     }
 }
 
-fn prepare_grid(grid: &mut RenderGrid, game_state: Game, stdout: &mut std::io::Stdout) {
+fn prepare_grid(grid: &mut RenderGrid, game_state: Game) {
     let direction: Direction = game_state.snake.direction.into();
     grid.set(
         game_state.snake.head.x as usize,
@@ -106,20 +97,6 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: Game, stdout: &mut std::io::S
         game_state.fruit.y as usize,
         Point::Fruit,
     );
-    // for debugging purposes - x/y are not aligned with number of rows/colums
-    queue!(
-        stdout,
-        cursor::MoveToNextLine(1),
-        style::Print(format!(
-            "x: {} - y: {} - direction: {:#?} - fruit - x: {} - y: {}",
-            game_state.snake.head.x,
-            game_state.snake.head.y,
-            direction,
-            game_state.fruit.x,
-            game_state.fruit.y
-        )),
-    )
-    .unwrap();
 }
 
 /**
@@ -135,7 +112,13 @@ fn render_line_wrapper(width: u32, top: bool) -> String {
     }
 }
 
-fn render_frame(grid: &RenderGrid, width: u32, score: u32, stdout: &mut std::io::Stdout) {
+fn render_frame(
+    grid: &RenderGrid,
+    width: u32,
+    score: u32,
+    state: GameState,
+    stdout: &mut std::io::Stdout,
+) {
     queue!(
         stdout,
         cursor::RestorePosition,
@@ -166,11 +149,7 @@ fn render_frame(grid: &RenderGrid, width: u32, score: u32, stdout: &mut std::io:
         cursor::MoveToNextLine(1),
         style::Print(format!("Score: {}", score)),
         cursor::MoveToNextLine(1),
-        style::Print(format!(
-            "{:^0width$}",
-            "SOME MESSAGE",
-            width = width as usize
-        )),
+        style::Print(format!("{:^0width$}", state, width = width as usize)),
     )
     .unwrap();
 }
