@@ -14,6 +14,8 @@ pub struct SizeOption {
 #[serde(rename_all = "camelCase")]
 pub struct InitOptions {
     pub frame_duration: u32,
+    #[serde(skip)]
+    pub snake_length: u32,
     pub size: SizeOption,
 }
 

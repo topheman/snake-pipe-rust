@@ -20,6 +20,7 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
         options.size.width,
         options.size.height,
         options.frame_duration as f64,
+        options.snake_length,
     );
     let mut last_loop_duration: Duration = Duration::new(0, 0);
     main.start();

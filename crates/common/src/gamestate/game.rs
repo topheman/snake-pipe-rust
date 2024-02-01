@@ -38,10 +38,10 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(width: u32, height: u32, frame_duration: f64) -> Self {
+    pub fn new(width: u32, height: u32, frame_duration: f64, snake_length: u32) -> Self {
         // use fn defined at eof to calc random fruit / snake pos here
         Self {
-            snake: Snake::new(calc_random_pos(width, height)),
+            snake: Snake::new(calc_random_pos(width, height), snake_length),
             fruit: calc_random_pos(width, height),
             size: (width, height),
             frame_duration,

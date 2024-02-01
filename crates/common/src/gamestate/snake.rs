@@ -3,8 +3,6 @@ use std::collections::LinkedList;
 
 use crate::gamestate::physics::{Direction, Position};
 
-const INITIAL_SNAKE_TAIL_LENGTH: usize = 2;
-
 #[derive(Debug, Serialize)]
 pub struct Snake {
     direction: Direction,
@@ -12,14 +10,15 @@ pub struct Snake {
     tail: LinkedList<Position>,
     #[serde(skip)]
     updated_tail_pos: bool,
+    initial_length: u32,
 }
 
 impl Snake {
-    pub fn new(head: Position) -> Self {
+    pub fn new(head: Position, snake_length: u32) -> Self {
         let (x, y) = (head.x, head.y);
         let mut tail = LinkedList::new();
 
-        for i in 1..(INITIAL_SNAKE_TAIL_LENGTH + 1) {
+        for i in 1..(snake_length + 1) {
             tail.push_back(Position { x, y: y - i as i32 });
         }
 
@@ -28,6 +27,7 @@ impl Snake {
             head: Position { x, y },
             tail,
             updated_tail_pos: false,
+            initial_length: snake_length,
         }
     }
 
@@ -81,7 +81,7 @@ impl Snake {
     }
 
     pub fn get_len(&self) -> usize {
-        &self.tail.len() - INITIAL_SNAKE_TAIL_LENGTH
+        &self.tail.len() - self.initial_length as usize
     }
 
     // pub fn is_alive(&self, size: (u32, u32)) -> bool {

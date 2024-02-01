@@ -29,6 +29,8 @@ enum Commands {
         /// default 25
         #[arg(long)]
         height: Option<u32>,
+        #[arg(long, default_value_t = 2)]
+        snake_length: u32,
         #[arg(long, default_value_t = false)]
         fit_terminal: bool,
     },
@@ -44,6 +46,7 @@ struct CliOptions<'a> {
     frame_duration: &'a u32,
     width: &'a Option<u32>,
     height: &'a Option<u32>,
+    snake_length: &'a u32,
     fit_terminal: &'a bool,
 }
 
@@ -75,6 +78,7 @@ impl Into<InitOptions> for CliOptions<'_> {
         }
         return InitOptions {
             frame_duration: *self.frame_duration,
+            snake_length: *self.snake_length,
             size,
         };
     }
@@ -88,12 +92,14 @@ fn main() {
             frame_duration,
             width,
             height,
+            snake_length,
             fit_terminal,
         } => {
             let cli_options = CliOptions {
                 frame_duration: frame_duration,
                 width: width,
                 height: height,
+                snake_length: snake_length,
                 fit_terminal: fit_terminal,
             };
             let game_options: InitOptions = cli_options.into();
