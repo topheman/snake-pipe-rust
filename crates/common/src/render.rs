@@ -1,3 +1,4 @@
+use ctrlc;
 use std::io::Write;
 
 use crate::stream::{parse_gamestate, Direction as StreamDirection, Game, GameState};
@@ -48,6 +49,11 @@ impl RenderGrid {
 }
 
 pub fn run() {
+    // don't answer to ctrl+c for `render` - let the stdin exhaust finish the process
+    // https://github.com/topheman/snake-pipe-rust/issues/1
+    // todo handle a ctrl+c (which is an edge case)
+    ctrlc::set_handler(|| {}).expect("Could not send signal on channel.");
+
     match parse_gamestate() {
         Ok(stream) => {
             // println!("{:?}\n", &stream.options);
@@ -74,7 +80,13 @@ pub fn run() {
                 stdout.flush().unwrap();
             }
             // once there is no more stream (maybe ctrl-c), show the cursor back
-            queue!(stdout, cursor::Show, cursor::RestorePosition,).unwrap();
+            queue!(
+                stdout,
+                cursor::RestorePosition,
+                terminal::Clear(terminal::ClearType::FromCursorDown),
+                cursor::Show,
+            )
+            .unwrap();
         }
         Err(e) => {
             println!("Error occurred while parsing stdin: \"{}\"", e);
