@@ -10,6 +10,7 @@ pub struct Snake {
     tail: LinkedList<Position>,
     #[serde(skip)]
     updated_tail_pos: bool,
+    #[serde(skip)]
     initial_length: u32,
 }
 
