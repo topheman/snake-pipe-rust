@@ -147,9 +147,13 @@ fn render_frame(
         stdout,
         style::Print(render_line_wrapper(width, false)),
         cursor::MoveToNextLine(1),
-        style::Print(format!("Score: {}", score)),
+        style::Print(format!("Score: {} - {}     ", score, state)),
         cursor::MoveToNextLine(1),
-        style::Print(format!("{:^0width$}", state, width = width as usize)),
+        style::Print(format!("[P] Pause")),
+        cursor::MoveToNextLine(1),
+        style::Print(format!("[R] Restart")),
+        cursor::MoveToNextLine(1),
+        style::Print(format!("[Ctrl+C] Quit")),
     )
     .unwrap();
 }

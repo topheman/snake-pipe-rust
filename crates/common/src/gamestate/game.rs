@@ -35,6 +35,8 @@ pub struct Game {
     waiting_time: f64,
     score: u32,
     pub state: GameState,
+    #[serde(skip)]
+    initial_snake_length: u32,
 }
 
 impl Game {
@@ -48,6 +50,7 @@ impl Game {
             waiting_time: 0.0,
             score: 0,
             state: GameState::Paused,
+            initial_snake_length: snake_length,
         }
     }
 
@@ -60,6 +63,16 @@ impl Game {
     }
 
     pub fn resume(&mut self) {
+        self.state = GameState::Running;
+    }
+
+    pub fn restart(&mut self) {
+        self.snake = Snake::new(
+            calc_random_pos(self.size.0, self.size.1),
+            self.initial_snake_length,
+        );
+        self.fruit = calc_random_pos(self.size.0, self.size.1);
+        self.score = 0;
         self.state = GameState::Running;
     }
 
@@ -126,6 +139,13 @@ impl Game {
                 } else {
                     self.resume();
                 }
+                Some(())
+            }
+            Event::Key(KeyEvent {
+                code: KeyCode::Char('r'),
+                ..
+            }) => {
+                self.restart();
                 Some(())
             }
             Event::Key(KeyEvent {
