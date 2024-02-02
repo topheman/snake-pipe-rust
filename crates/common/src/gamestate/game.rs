@@ -6,7 +6,6 @@ use crate::gamestate::physics::{Direction, Position};
 use crate::gamestate::snake::Snake;
 
 fn calc_random_pos(width: u32, height: u32) -> Position {
-    // todo check inverted params
     let mut rng = rand::thread_rng();
 
     Position {
@@ -41,7 +40,6 @@ pub struct Game {
 
 impl Game {
     pub fn new(width: u32, height: u32, frame_duration: f64, snake_length: u32) -> Self {
-        // use fn defined at eof to calc random fruit / snake pos here
         Self {
             snake: Snake::new(calc_random_pos(width, height), snake_length),
             fruit: calc_random_pos(width, height),
@@ -76,27 +74,11 @@ impl Game {
         self.state = GameState::Running;
     }
 
-    // pub fn toggle_game_state(&mut self) {
-    //     if self.paused {
-    //         self.start();
-    //     } else {
-    //         self.pause();
-    //     }
-    // }
-
     /// returns true if the state has been updated because it was time to
     pub fn update(&mut self, delta_time: f64) -> bool {
         self.waiting_time += delta_time;
 
-        // if self.over {
-        // if self.waiting_time > RESTART_TIME {
-        //     self.restart();
-        // }
-        // return;
-        // }
-
         if self.waiting_time > self.frame_duration && self.state != GameState::Over {
-            // self.check_colision() use snake.get_head_pos;
             self.waiting_time = 0.0;
 
             if self.state == GameState::Paused || self.state == GameState::Over {
@@ -123,12 +105,6 @@ impl Game {
     pub fn key_down(&mut self, event: crossterm::event::Event) -> Option<()> {
         use crossterm::event::{Event, KeyCode, KeyEvent};
 
-        // match key {
-        //     Key::R => self.over = false, // temp solution -> replace current game state trough new one
-        //     Key::Space => self.toggle_game_state(),
-        //     _ => self.start(),
-        // }
-
         match event {
             Event::Key(KeyEvent {
                 code: KeyCode::Char('p'),
@@ -152,7 +128,7 @@ impl Game {
                 code: KeyCode::Left,
                 ..
             }) => {
-                self.snake.set_dir(Direction::Left); // todo review directions
+                self.snake.set_dir(Direction::Left);
                 Some(())
             }
             Event::Key(KeyEvent {
@@ -191,33 +167,4 @@ impl Game {
     fn calc_score(&mut self) {
         self.score = (self.snake.get_len() * 10) as u32
     }
-
-    // IMPORTANT!! -
-
-    // fn update_snake(&mut self, dir: Option<Direction>) {
-    //     if self.check_if_snake_alive(dir) {
-    //         self.snake.move_forward(dir);
-    //         self.check_eating();
-    //     } else {
-    //         self.game_over = true;
-    //     }
-    //     self.waiting_time = 0.0;
-    // }
 }
-
-// fn calc_not_overlapping_pos(pos_vec: Vec<Position>, width: u32, height: u32) {
-//     let mut fruit_pos: Position = calc_random_pos(width, height);
-
-//     loop {
-//         // if snake_pos.y != fruit_pos.y {
-//         //     break;
-//         // }
-
-//         for pos in pos_vec {
-//             if
-//         }
-
-//         snake_pos = calc_random_pos(width, height);
-//         fruit_pos = calc_random_pos(width, height);
-//     }
-// }
