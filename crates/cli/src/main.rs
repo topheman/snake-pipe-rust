@@ -1,6 +1,5 @@
 use clap::{Parser, Subcommand};
 use crossterm;
-use exitcode;
 
 use common::gamestate::run as gamestate_run;
 use common::render::run as render_run;
