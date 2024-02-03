@@ -66,10 +66,10 @@ impl Into<InitOptions> for CliOptions<'_> {
             }
         } else if self.fit_terminal.eq(&true) {
             let (width, height) = crossterm::terminal::size()
-                .unwrap_or((DEFAULT_WIDTH as u16, DEFAULT_HEIGHT as u16));
+                .unwrap_or((DEFAULT_WIDTH as u16 + 2, DEFAULT_HEIGHT as u16 + 6));
             size = SizeOption {
-                width: width as u32,
-                height: height as u32,
+                width: width as u32 - 2,   // 2 borders
+                height: height as u32 - 6, // 2 borders + 4 lines of score/etc ...
             }
         } else {
             size = SizeOption {
@@ -96,11 +96,6 @@ fn main() {
             snake_length,
             fit_terminal,
         } => {
-            if *fit_terminal {
-                eprintln!("The --fit-terminal option is not supported yet.");
-                std::process::exit(exitcode::USAGE);
-            }
-
             let cli_options = CliOptions {
                 frame_duration: frame_duration,
                 width: width,
