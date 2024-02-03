@@ -1,5 +1,6 @@
 use clap::{Parser, Subcommand};
 use crossterm;
+use exitcode;
 
 use common::gamestate::run as gamestate_run;
 use common::render::run as render_run;
@@ -95,6 +96,11 @@ fn main() {
             snake_length,
             fit_terminal,
         } => {
+            if *fit_terminal {
+                eprintln!("The --fit-terminal option is not supported yet.");
+                std::process::exit(exitcode::USAGE);
+            }
+
             let cli_options = CliOptions {
                 frame_duration: frame_duration,
                 width: width,

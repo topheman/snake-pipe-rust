@@ -13,3 +13,4 @@ path = "src/main.rs"
 common = { path = "../common" }
 clap = { version = "4.0", features = ["derive"] }
 crossterm = "0.27.0"
+exitcode = "1.1.2"
