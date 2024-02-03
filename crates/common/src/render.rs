@@ -49,14 +49,21 @@ impl RenderGrid {
 }
 
 pub fn run() {
-    // don't answer to ctrl+c for `render` - let the stdin exhaust finish the process
-    // https://github.com/topheman/snake-pipe-rust/issues/1
-    // todo handle a ctrl+c (which is an edge case)
-    ctrlc::set_handler(|| {}).expect("Could not send signal on channel.");
-
     match parse_gamestate() {
         Ok(stream) => {
-            // println!("{:?}\n", &stream.options);
+            ctrlc::set_handler(|| {
+                // cleanup on ctrl+c
+                queue!(
+                    std::io::stdout(),
+                    cursor::RestorePosition,
+                    terminal::Clear(terminal::ClearType::FromCursorDown),
+                    cursor::Show,
+                )
+                .unwrap();
+                std::process::exit(130);
+            })
+            .expect("Could not send signal on channel.");
+
             let mut stdout = std::io::stdout();
             queue!(
                 stdout,
