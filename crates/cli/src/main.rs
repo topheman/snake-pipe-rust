@@ -108,6 +108,7 @@ fn main() {
             let _ = crossterm::terminal::enable_raw_mode();
             let _ = gamestate_run(game_options); // this function returns when ctrl+c is hit
             let _ = crossterm::terminal::disable_raw_mode();
+            std::process::exit(130); // todo handle other signals ?
         }
         Commands::Render => {
             render_run();
