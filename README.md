@@ -26,25 +26,25 @@ Build the project by running: `cargo build`.
 🎮 Play in terminal:
 
 - takes user inputs and writes gamestate into stdout
-  - `./target/debug/snake gamestate`
-- same but faster, with a bigger level and starting with a bigger snake at begining
-  - `./target/debug/snake gamestate --frame-duration 80 --width 70 --height 20 --snake-length 15`
-- play snake rendered in the terminal
-  - `./target/debug/snake gamestate|./target/debug/snake render`
+  - `./target/debug/snakepipe gamestate`
+- same but faster, with a bigger level and starting with a bigger snakepipe at begining
+  - `./target/debug/snakepipe gamestate --frame-duration 80 --width 70 --height 20 --snakepipe-length 15`
+- play snakepipe rendered in the terminal
+  - `./target/debug/snakepipe gamestate|./target/debug/snakepipe render`
 
 📼 You can even record and replay using basic piping.
 
 - record using the [`tee` command utility](https://en.wikipedia.org/wiki/Tee_(command))
-  - `./target/debug/snake gamestate|tee /tmp/snake-output|./target/debug/snake render`
+  - `./target/debug/snakepipe gamestate|tee /tmp/snakepipe-output|./target/debug/snakepipe render`
 - replay the game recorded previously
-  - `cat /tmp/snake-output|./target/debug/snake throttle|./target/debug/snake render`
+  - `cat /tmp/snakepipe-output|./target/debug/snakepipe throttle|./target/debug/snakepipe render`
 
 ## Manual of commands
 
 <details>
-  <summary><code>./target/debug/snake --help</code></summary>
+  <summary><code>./target/debug/snakepipe --help</code></summary>
   <pre>
-Usage: snake <CMD_>
+Usage: snakepipe <CMD_>
 
 Commands:
   gamestate
@@ -59,30 +59,30 @@ Options:
 </details>
 
 <details>
-  <summary><code>./target/debug/snake gamestate --help</code></summary>
+  <summary><code>./target/debug/snakepipe gamestate --help</code></summary>
   <pre>
-Usage: snake gamestate [OPTIONS]
+Usage: snakepipe gamestate [OPTIONS]
 
 Options:
       --frame-duration <FRAME_DURATION>  in ms [default: 120]
       --width <WIDTH_>                    default 25
       --height <HEIGHT_>                  default 25
-      --snake-length <SNAKE_LENGTH>      [default: 2]
+      --snakepipe-length <snakepipe_LENGTH>      [default: 2]
       --fit-terminal
   </pre>
 </details>
 
 <details>
-  <summary><code>./target/debug/snake render --help</code></summary>
+  <summary><code>./target/debug/snakepipe render --help</code></summary>
   <pre>
-Usage: snake render
+Usage: snakepipe render
   </pre>
 </details>
 
 <details>
-  <summary><code>./target/debug/snake throttle --help</code></summary>
+  <summary><code>./target/debug/snakepipe throttle --help</code></summary>
   <pre>
-Usage: snake throttle [OPTIONS]
+Usage: snakepipe throttle [OPTIONS]
 
 Options:
       --frame-duration <FRAME_DURATION>  in ms [default: 120]
