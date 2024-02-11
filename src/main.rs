@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
 use crossterm;
 
-use common::gamestate::run as gamestate_run;
-use common::render::run as render_run;
-use common::stream::{InitOptions, SizeOption};
-use common::throttle::run as throttle_run;
+use snakepipe::gamestate::run as gamestate_run;
+use snakepipe::render::run as render_run;
+use snakepipe::stream::{InitOptions, SizeOption};
+use snakepipe::throttle::run as throttle_run;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
