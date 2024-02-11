@@ -2,6 +2,9 @@
 name = "snakepipe"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/topheman/snake-pipe-rust"
+authors = ["Christophe Rosset"]
+keywords = ["cli", "game", "snake", "unix", "pipe"]
 
 [[bin]]
 name = "snakepipe"
