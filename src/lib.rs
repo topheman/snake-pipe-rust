@@ -1,4 +1,6 @@
 #[doc(hidden)]
+pub mod common;
+#[doc(hidden)]
 pub mod gamestate;
 #[doc(hidden)]
 pub mod render;
