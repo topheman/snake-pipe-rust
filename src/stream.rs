@@ -107,6 +107,8 @@ impl Stream {
 /// Parses a gamestate streamed into stdin
 /// Example:
 /// ```
+/// use snakepipe::stream::{parse_gamestate, Game};
+///
 /// match parse_gamestate() {
 ///     Ok(stream) => {
 ///         println!(
@@ -117,12 +119,16 @@ impl Stream {
 ///             stream.options.size.height
 ///         );
 ///         for parsed_line in stream.lines {
-///             do_something(parsed_lined);
+///             do_something(parsed_line);
 ///         }
 ///     }
 ///     Err(e) => {
 ///         println!("Error occurred while parsing stdin: \"{}\"", e);
 ///     }
+/// }
+///
+/// fn do_something(parsed_line: Game) {
+///     println!("Snake head position {:?}", parsed_line.snake.head)
 /// }
 /// ```
 pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
