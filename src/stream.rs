@@ -10,6 +10,8 @@ pub struct SizeOption {
     pub height: u32,
 }
 
+/// Holds the options that were passed to the cli with a flag
+/// that are relevent for rendering the game.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct InitOptions {
@@ -62,6 +64,7 @@ impl fmt::Display for GameState {
     }
 }
 
+/// Holds the state of the game at any time
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Game {
     pub snake: Snake,
@@ -70,11 +73,11 @@ pub struct Game {
     pub state: GameState,
 }
 
-/**
- * Accepts the iterator from `stdin().lines()`
- * - parses the first line into `option`
- * - returns an iterator of the other lines in `lines` (already parsed)
- */
+/// Accepts the iterator from `stdin().lines()`
+/// - parses the first line into `options` as [InitOptions]
+/// - returns an iterator of [Game] inside `lines` (already parsed)
+///
+/// Used by [parse_gamestate] under the hood.
 pub struct Stream {
     pub options: InitOptions,
     pub lines: Box<dyn Iterator<Item = Game>>, // std::io::Lines<T>, //Lines<T>,
@@ -101,6 +104,27 @@ impl Stream {
     }
 }
 
+/// Parses a gamestate streamed into stdin
+/// Example:
+/// ```
+/// match parse_gamestate() {
+///     Ok(stream) => {
+///         println!(
+///             "Frame duration {}, Snake length {}, Level {}x{}",
+///             stream.options.frame_duration,
+///             stream.options.snake_length,
+///             stream.options.size.width,
+///             stream.options.size.height
+///         );
+///         for parsed_line in stream.lines {
+///             do_something(parsed_lined);
+///         }
+///     }
+///     Err(e) => {
+///         println!("Error occurred while parsing stdin: \"{}\"", e);
+///     }
+/// }
+/// ```
 pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
     let lines = stdin().lines();
     Stream::new(lines)
