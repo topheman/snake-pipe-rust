@@ -119,7 +119,7 @@ fn prepare_grid(grid: &mut RenderGrid, game_state: Game) {
 }
 
 /**
- * https://en.wikipedia.org/wiki/Box-drawing_character
+ * `<https://en.wikipedia.org/wiki/Box-drawing_character>`
  */
 fn render_line_wrapper(width: u32, top: bool) -> String {
     let line = (0..width)
