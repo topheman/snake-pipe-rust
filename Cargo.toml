@@ -5,6 +5,8 @@ edition = "2021"
 repository = "https://github.com/topheman/snake-pipe-rust"
 authors = ["Christophe Rosset"]
 keywords = ["cli", "game", "snake", "unix", "pipe"]
+description = "A snake game based on stdin/stdout following unix philosophy"
+license = "MIT"
 
 [[bin]]
 name = "snakepipe"
