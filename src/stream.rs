@@ -19,6 +19,7 @@ pub struct InitOptions {
     #[serde(skip)]
     pub snake_length: u32,
     pub size: SizeOption,
+    pub version: std::collections::HashMap<String, String>,
 }
 
 // gamestate

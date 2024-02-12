@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use crossterm;
 
+use snakepipe::common::format_version_to_display;
 use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::render::run as render_run;
 use snakepipe::stream::{InitOptions, SizeOption};
@@ -76,10 +77,13 @@ impl Into<InitOptions> for CliOptions<'_> {
                 height: DEFAULT_HEIGHT,
             }
         }
+        let mut version = std::collections::HashMap::new();
+        version.insert("gamestate".to_string(), format_version_to_display());
         return InitOptions {
             frame_duration: *self.frame_duration,
             snake_length: *self.snake_length,
             size,
+            version: version,
         };
     }
 }
