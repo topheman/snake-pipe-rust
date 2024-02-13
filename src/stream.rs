@@ -19,7 +19,7 @@ pub struct InitOptions {
     #[serde(skip)]
     pub snake_length: u32,
     pub size: SizeOption,
-    pub version: std::collections::HashMap<String, String>,
+    pub features_with_version: std::collections::HashMap<String, String>,
 }
 
 // gamestate
@@ -74,18 +74,19 @@ pub struct Game {
     pub state: GameState,
 }
 
-/// Accepts the iterator from `stdin().lines()`
-/// - parses the first line into `options` as [InitOptions]
-/// - returns an iterator of [Game] inside `lines` (already parsed)
+/// Accepts the iterator from [`std::io::stdin()`]`.line()`
+/// - parses the first line into `options` as [`InitOptions`]
+/// - returns an iterator of [`Game`] inside `lines` (already parsed)
 ///
-/// Used by [parse_gamestate] under the hood.
+/// Used by [`parse_gamestate`] under the hood.
 pub struct Stream {
     pub options: InitOptions,
     pub lines: Box<dyn Iterator<Item = Game>>, // std::io::Lines<T>, //Lines<T>,
 }
 
 impl Stream {
-    fn new<T: BufRead + 'static>(
+    /// Creates a stream from a buffer (could be from [`std::io::stdin()`]`.line()`)
+    pub fn new<T: BufRead + 'static>(
         mut lines: Lines<T>,
     ) -> Result<Stream, Box<dyn std::error::Error>> {
         let first_line = lines.next().unwrap()?;
@@ -110,21 +111,23 @@ impl Stream {
 /// ```
 /// use snakepipe::stream::{parse_gamestate, Game};
 ///
-/// match parse_gamestate() {
-///     Ok(stream) => {
-///         println!(
-///             "Frame duration {}, Snake length {}, Level {}x{}",
-///             stream.options.frame_duration,
-///             stream.options.snake_length,
-///             stream.options.size.width,
-///             stream.options.size.height
-///         );
-///         for parsed_line in stream.lines {
-///             do_something(parsed_line);
+/// fn main() -> () {
+///     match parse_gamestate() {
+///         Ok(stream) => {
+///             println!(
+///                 "Frame duration {}, Snake length {}, Level {}x{}",
+///                 stream.options.frame_duration,
+///                 stream.options.snake_length,
+///                 stream.options.size.width,
+///                 stream.options.size.height
+///             );
+///             for parsed_line in stream.lines {
+///                 do_something(parsed_line);
+///             }
 ///         }
-///     }
-///     Err(e) => {
-///         println!("Error occurred while parsing stdin: \"{}\"", e);
+///         Err(e) => {
+///             println!("Error occurred while parsing stdin: \"{}\"", e);
+///         }
 ///     }
 /// }
 ///

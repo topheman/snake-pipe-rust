@@ -3,26 +3,37 @@ use std::collections::HashMap;
 
 use clap::crate_version;
 
+/// Returns the name of the crate with the version in the `Cargo.toml`
 pub fn format_version_to_display() -> String {
     format!("snakepipe@{}(rust)", crate_version!())
 }
 
-// todo use https://docs.rs/indexmap/latest/indexmap/map/struct.IndexMap.html to have deterministic keys order
-
-/// Takes in [crate::stream::InitOptions::version] end extracts a HashMap with
+/// Takes in [`crate::stream::InitOptions::features_with_version`] and extracts a HashMap with
 /// - keys: versions
 /// - values: vector of string of features
 ///
 /// Example:
 ///
-/// Input
-/// ```
-/// {"throttle": "snakepipe@1.0.0(node)", "render": "snakepipe@1.0.0(rust)", "gamestate": "snakepipe@1.0.0(rust)"}
+/// Input (as [`std::collections::HashMap<String, String>`])
+/// ```json
+/// {
+///   "throttle": "snakepipe@1.0.0(node)",
+///   "render": "snakepipe@1.0.0(rust)",
+///   "gamestate": "snakepipe@1.0.0(rust)"
+/// }
 /// ```
 ///
-/// Output
-/// ```
-/// {"snakepipe@1.0.0(rust)": ["gamestate", "render"], "snakepipe@1.0.0(node)": ["throttle"]}
+/// Output (as [`indexmap::map::IndexMap<String, Vec<String>>`])
+/// ```json
+/// {
+///   "snakepipe@1.0.0(rust)": [
+///     "gamestate",
+///     "render"
+///   ],
+///   "snakepipe@1.0.0(node)": [
+///     "throttle"
+///   ]
+/// }
 /// ```
 pub fn extract_versions_with_features(
     features_with_version: HashMap<String, String>,
@@ -43,13 +54,21 @@ pub fn extract_versions_with_features(
     return versions_with_features;
 }
 
-/// Takes in the output of [extract_versions_with_features] and formats it in a string
+/// Takes in the output of [`extract_versions_with_features`] and formats it in a string
 ///
 /// Example:
 ///
 /// Input
-/// ```
-/// {"snakepipe@1.0.0(rust)": ["gamestate", "render"], "snakepipe@1.0.0(node)": ["throttle"]}
+/// ```json
+/// {
+///   "snakepipe@1.0.0(rust)": [
+///     "gamestate",
+///     "render"
+///   ],
+///   "snakepipe@1.0.0(node)": [
+///     "throttle"
+///   ]
+/// }
 /// ```
 ///
 /// Ouput
