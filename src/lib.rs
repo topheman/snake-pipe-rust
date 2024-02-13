@@ -1,4 +1,3 @@
-#[doc(hidden)]
 pub mod common;
 #[doc(hidden)]
 pub mod gamestate;
