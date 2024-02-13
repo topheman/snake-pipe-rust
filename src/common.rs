@@ -90,6 +90,13 @@ pub fn format_version_with_features(
     return couple_version_features.join(" - ");
 }
 
+/// Takes in [`crate::stream::InitOptions::features_with_version`] and formats it to a string
+///
+/// Composes [extract_versions_with_features] and [format_version_with_features].
+pub fn format_version(features_with_version: HashMap<String, String>) -> String {
+    return format_version_with_features(extract_versions_with_features(features_with_version));
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;

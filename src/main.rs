@@ -66,10 +66,10 @@ impl Into<InitOptions> for CliOptions<'_> {
             }
         } else if self.fit_terminal.eq(&true) {
             let (width, height) = crossterm::terminal::size()
-                .unwrap_or((DEFAULT_WIDTH as u16 + 2, DEFAULT_HEIGHT as u16 + 6));
+                .unwrap_or((DEFAULT_WIDTH as u16 + 2, DEFAULT_HEIGHT as u16 + 7));
             size = SizeOption {
                 width: width as u32 - 2,   // 2 borders
-                height: height as u32 - 6, // 2 borders + 4 lines of score/etc ...
+                height: height as u32 - 7, // 2 borders + 4 lines of score/etc ...
             }
         } else {
             size = SizeOption {

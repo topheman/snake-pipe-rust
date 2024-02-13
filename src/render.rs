@@ -1,6 +1,7 @@
 use ctrlc;
 use std::io::Write;
 
+use crate::common::format_version;
 use crate::stream::{parse_gamestate, Direction as StreamDirection, Game, GameState};
 use array2d::Array2D;
 use crossterm::{cursor, queue, style, terminal};
@@ -64,6 +65,8 @@ pub fn run() {
             })
             .expect("Could not send signal on channel.");
 
+            let version = format_version(stream.options.features_with_version);
+
             let mut stdout = std::io::stdout();
             queue!(
                 stdout,
@@ -79,6 +82,7 @@ pub fn run() {
                 prepare_grid(&mut grid, parsed_line.clone());
                 render_frame(
                     &grid,
+                    &version,
                     stream.options.size.width,
                     parsed_line.score,
                     parsed_line.state,
@@ -133,6 +137,7 @@ fn render_line_wrapper(width: u32, top: bool) -> String {
 
 fn render_frame(
     grid: &RenderGrid,
+    version: &String,
     width: u32,
     score: u32,
     state: GameState,
@@ -173,6 +178,8 @@ fn render_frame(
         style::Print(format!("[R] Restart")),
         cursor::MoveToNextLine(1),
         style::Print(format!("[Ctrl+C] Quit")),
+        cursor::MoveToNextLine(1),
+        style::Print(format!("{}", version)),
     )
     .unwrap();
 }
