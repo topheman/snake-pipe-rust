@@ -22,3 +22,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 array2d = "0.3.0"
 ctrlc = "3.4.2"
+indexmap = "2.2.3"
