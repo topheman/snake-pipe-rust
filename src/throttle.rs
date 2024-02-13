@@ -12,7 +12,7 @@ pub fn run(frame_duration: u32) {
             let mut options_passthrough = stream.options.clone();
             options_passthrough.frame_duration = frame_duration;
             options_passthrough
-                .version
+                .features_with_version
                 .insert("throttle".to_string(), format_version_to_display());
             println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
             let mut last_loop_duration: Duration = Duration::new(0, 0);

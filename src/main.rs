@@ -77,13 +77,13 @@ impl Into<InitOptions> for CliOptions<'_> {
                 height: DEFAULT_HEIGHT,
             }
         }
-        let mut version = std::collections::HashMap::new();
-        version.insert("gamestate".to_string(), format_version_to_display());
+        let mut features_with_version = std::collections::HashMap::new();
+        features_with_version.insert("gamestate".to_string(), format_version_to_display());
         return InitOptions {
             frame_duration: *self.frame_duration,
             snake_length: *self.snake_length,
             size,
-            version: version,
+            features_with_version: features_with_version,
         };
     }
 }
