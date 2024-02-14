@@ -102,6 +102,38 @@ Options:
   </pre>
 </details>
 
+## Using as a library
+
+This crate is a cli, but it also exports a lib from where you can import a few utilities, such as `snakepipe::stream::parse_gamestate` - [direct link to docs.rs](https://docs.rs/snakepipe/latest/snakepipe/stream/fn.parse_gamestate.html):
+
+```rust
+use snakepipe::stream::{parse_gamestate, Game};
+
+fn main() -> () {
+    match parse_gamestate() {
+        Ok(stream) => {
+            println!(
+                "Frame duration {}, Snake length {}, Level {}x{}",
+                stream.options.frame_duration,
+                stream.options.snake_length,
+                stream.options.size.width,
+                stream.options.size.height
+            );
+            for parsed_line in stream.lines {
+                do_something(parsed_line);
+            }
+        }
+        Err(e) => {
+            println!("Error occurred while parsing stdin: \"{}\"", e);
+        }
+    }
+}
+
+fn do_something(parsed_line: Game) {
+    println!("Snake head position {:?}", parsed_line.snake.head)
+}
+```
+
 ## Next
 
 - [ ] Make an implementation of the `render` command that starts a server so that the render happens in a browser
