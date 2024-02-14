@@ -12,12 +12,27 @@ export PS1='%{%B%}topheman/snake-pipe-rust%{$reset_color%}%  > '
 
 ---
 
+link `snakepipe` to the debug binary in the project
+
+```sh
+SNAKE_PATH="$PWD/target/debug"
+export PATH="$SNAKE_PATH:$PATH"
+```
+
+---
+
 cmd+K
 
 ---
 
 ```sh
-cargo build
+cargo install snakepipe
+```
+
+---
+
+```sh
+snakepipe
 ```
 
 ---
@@ -26,7 +41,7 @@ cargo build
 # Run the gamestate command
 # which accepts user inputs and passes the game state to stdout
 
-./target/debug/snake gamestate
+snakepipe gamestate
 ```
 
 ---
@@ -34,7 +49,7 @@ cargo build
 ```sh
 # Pipe the output of gamestate command to the render command
 
-./target/debug/snake gamestate|./target/debug/snake render
+snakepipe gamestate|snakepipe render
 ```
 
 ---
@@ -42,7 +57,7 @@ cargo build
 ```sh
 # Record a party by saving the output of gamestate command to a file with the built-in tee utility
 
-./target/debug/snake gamestate|tee /tmp/snake-output|./target/debug/snake render
+snakepipe gamestate|tee /tmp/snake-output|snakepipe render
 ```
 
 ---
@@ -50,7 +65,7 @@ cargo build
 ```sh
 # Replay a party by reading the previous file and streaming it to the render command with the throttle command
 
-cat /tmp/snake-output|./target/debug/snake throttle|./target/debug/snake render
+cat /tmp/snake-output|snakepipe throttle|snakepipe render
 ```
 
 ---

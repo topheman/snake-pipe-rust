@@ -1,14 +1,16 @@
 # snake-pipe-rust
 
+[![crates.io](https://img.shields.io/crates/v/snakepipe.svg)](https://crates.io/crates/snakepipe) [![Docs](https://docs.rs/snakepipe/badge.svg)](https://docs.rs/snakepipe/latest/snakepipe/)
+
 Not just yet another snake game in the terminal 😉.
 
 https://github.com/topheman/snake-pipe-rust/assets/985982/57b7e5e1-ef0b-4047-8079-f5d455b05a25
 
 This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) as:
 
-- the `gamestate` command accepts user inputs, calculates the state of the game and writes it to `stdout`
-- the `render` command reads the state of the game from `stdin` and renders it on the terminal
-- the `throttle` command reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `render` can pick it up
+- `snakepipe gamestate` accepts user inputs, calculates the state of the game and writes it to `stdout`
+- `snakepipe render` reads the state of the game from `stdin` and renders it on the terminal
+- `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
 
 That way:
 
@@ -19,30 +21,41 @@ That way:
 
 - Rust 1.75.0
 
+## Install
+
+```sh
+cargo install snakepipe
+```
+
 ## Usage
 
-Build the project by running: `cargo build`.
+🎮 Play in terminal
 
-🎮 Play in terminal:
+```sh
+# basic usage
+snakepipe gamestate|snakepipe render
 
-- takes user inputs and writes gamestate into stdout
-  - `./target/debug/snakepipe gamestate`
-- same but faster, with a bigger level and starting with a bigger snakepipe at begining
-  - `./target/debug/snakepipe gamestate --frame-duration 80 --width 70 --height 20 --snakepipe-length 15`
-- play snakepipe rendered in the terminal
-  - `./target/debug/snakepipe gamestate|./target/debug/snakepipe render`
+# change the defaults
+snakepipe gamestate --frame-duration 80 --width 70 --height 20 --snakepipe-length 15|snakepipe render
 
-📼 You can even record and replay using basic piping.
+# call help on any of the commands
+snakepipe --help
+```
 
-- record using the [`tee` command utility](https://en.wikipedia.org/wiki/Tee_(command))
-  - `./target/debug/snakepipe gamestate|tee /tmp/snakepipe-output|./target/debug/snakepipe render`
-- replay the game recorded previously
-  - `cat /tmp/snakepipe-output|./target/debug/snakepipe throttle|./target/debug/snakepipe render`
+📼 You can even record and replay using basic piping
+
+```sh
+# record a game into a file using the `tee` command utility
+snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
+
+# replay the game you recorded
+cat /tmp/snakepipe-output|snakepipe throttle|snakepipe render
+```
 
 ## Manual of commands
 
 <details>
-  <summary><code>./target/debug/snakepipe --help</code></summary>
+  <summary><code>snakepipe --help</code></summary>
   <pre>
 Usage: snakepipe <CMD_>
 
@@ -59,7 +72,7 @@ Options:
 </details>
 
 <details>
-  <summary><code>./target/debug/snakepipe gamestate --help</code></summary>
+  <summary><code>snakepipe gamestate --help</code></summary>
   <pre>
 Usage: snakepipe gamestate [OPTIONS]
 
@@ -73,14 +86,14 @@ Options:
 </details>
 
 <details>
-  <summary><code>./target/debug/snakepipe render --help</code></summary>
+  <summary><code>snakepipe render --help</code></summary>
   <pre>
 Usage: snakepipe render
   </pre>
 </details>
 
 <details>
-  <summary><code>./target/debug/snakepipe throttle --help</code></summary>
+  <summary><code>snakepipe throttle --help</code></summary>
   <pre>
 Usage: snakepipe throttle [OPTIONS]
 
