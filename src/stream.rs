@@ -107,6 +107,7 @@ impl Stream {
 }
 
 /// Parses a gamestate streamed into stdin
+///
 /// Example:
 /// ```
 /// use snakepipe::stream::{parse_gamestate, Game};
@@ -135,6 +136,8 @@ impl Stream {
 ///     println!("Snake head position {:?}", parsed_line.snake.head)
 /// }
 /// ```
+///
+/// If you want to parse from elsewhere than stdin, you can use [Stream]
 pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
     let lines = stdin().lines();
     Stream::new(lines)
