@@ -418,7 +418,7 @@ checksum = "e6ecd384b10a64542d77071bd64bd7b231f4ed5940fba55e98c3de13824cf3d7"
 
 [[package]]
 name = "snakepipe"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "array2d",
  "clap",
