@@ -4,7 +4,7 @@
 
 Not just yet another snake game in the terminal 😉.
 
-https://github.com/topheman/snake-pipe-rust/assets/985982/57b7e5e1-ef0b-4047-8079-f5d455b05a25
+https://github.com/topheman/snake-pipe-rust/assets/985982/76161595-1c3a-4252-9cbd-25e144bf185c
 
 This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) as:
 
