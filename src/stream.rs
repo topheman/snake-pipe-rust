@@ -89,20 +89,25 @@ impl Stream {
     pub fn new<T: BufRead + 'static>(
         mut lines: Lines<T>,
     ) -> Result<Stream, Box<dyn std::error::Error>> {
-        let first_line = lines.next().unwrap()?;
-        let options: InitOptions = serde_json::from_str(&first_line)?;
-        // flat_map keeps Some and extracts their values while removing Err - we ignore parse errors on lines / we dont panic on it
-        let parsed_lines = lines.flat_map(|result_line| match result_line {
-            Ok(line) => match serde_json::from_str::<Game>(&line) {
-                Ok(parsed_line) => Some(parsed_line),
-                Err(_) => None,
-            },
-            Err(_) => None,
-        });
-        Ok(Self {
-            options,
-            lines: Box::new(parsed_lines),
-        })
+        match lines.next() {
+            Some(Ok(first_line)) => {
+                let options: InitOptions = serde_json::from_str(&first_line)?;
+                // flat_map keeps Some and extracts their values while removing Err - we ignore parse errors on lines / we dont panic on it
+                let parsed_lines = lines.flat_map(|result_line| match result_line {
+                    Ok(line) => match serde_json::from_str::<Game>(&line) {
+                        Ok(parsed_line) => Some(parsed_line),
+                        Err(_) => None,
+                    },
+                    Err(_) => None,
+                });
+                Ok(Self {
+                    options,
+                    lines: Box::new(parsed_lines),
+                })
+            }
+            None => Err("Buffer is empty".into()),
+            Some(Err(e)) => Err(e.into()),
+        }
     }
 }
 
