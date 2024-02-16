@@ -19,7 +19,7 @@ That way:
 
 ## Prerequisites
 
-- Rust 1.75.0
+- Rust 1.75.0 - [How to install Rust (if you don't have it yet)](https://www.rust-lang.org/tools/install)
 
 ## Install
 
