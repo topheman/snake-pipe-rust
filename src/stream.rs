@@ -4,7 +4,7 @@ use std::io::{stdin, BufRead, Lines};
 
 // options
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct SizeOption {
     pub width: u32,
     pub height: u32,
@@ -145,6 +145,8 @@ impl Stream {
 ///
 /// If you want to parse from elsewhere than stdin, you can use [Stream]
 pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
+    // todo couldn't find how to peek into the stream (to know if it comes from `snake gamestate` or `cat /some-file`), without consuming it
+    // so we'll show a "Replay" message when `gamestate throttle` is used in the pipeline (even if it could only be used to throttle directly `gamestate`)
     let lines = stdin().lines();
     Stream::new(lines)
 }
