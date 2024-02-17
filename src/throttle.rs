@@ -14,6 +14,9 @@ pub fn run(frame_duration: u32) {
             options_passthrough
                 .features_with_version
                 .insert("throttle".to_string(), format_version_to_display());
+            options_passthrough
+                .metadatas
+                .insert("throttled".to_string(), "on".to_string());
             println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
             let mut last_loop_duration: Duration = Duration::new(0, 0);
             loop {
