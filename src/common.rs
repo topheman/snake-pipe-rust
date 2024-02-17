@@ -1,6 +1,7 @@
 use indexmap::map::IndexMap; // we need IndexMap to have deterministic order of keys when `.iter()`
 use std::collections::HashMap;
 
+use crate::stream::SizeOption;
 use clap::crate_version;
 
 /// Returns the name of the crate with the version in the `Cargo.toml`
@@ -95,6 +96,14 @@ pub fn format_version_with_features(
 /// Composes [extract_versions_with_features] and [format_version_with_features].
 pub fn format_version(features_with_version: HashMap<String, String>) -> String {
     return format_version_with_features(extract_versions_with_features(features_with_version));
+}
+
+pub fn format_metadatas(
+    metadatas: HashMap<String, String>,
+    frame_duration: u32,
+    size: SizeOption,
+) -> String {
+    return "Some metadatas".to_string();
 }
 
 #[cfg(test)]

@@ -1,7 +1,7 @@
 use ctrlc;
 use std::io::Write;
 
-use crate::common::format_version;
+use crate::common::{format_metadatas, format_version};
 use crate::stream::{parse_gamestate, Direction as StreamDirection, Game, GameState};
 use array2d::Array2D;
 use crossterm::{cursor, queue, style, terminal};
@@ -66,6 +66,16 @@ pub fn run() {
             .expect("Could not send signal on channel.");
 
             let version = format_version(stream.options.features_with_version);
+            let formatted_metadatas = format_metadatas(
+                stream.options.metadatas,
+                stream.options.frame_duration,
+                stream.options.size,
+            );
+            let formatted_metadatas = if formatted_metadatas.is_empty() {
+                "".to_string()
+            } else {
+                format!(" - {}", formatted_metadatas)
+            };
 
             let mut stdout = std::io::stdout();
             queue!(
@@ -83,6 +93,7 @@ pub fn run() {
                 render_frame(
                     &grid,
                     &version,
+                    &formatted_metadatas,
                     stream.options.size.width,
                     parsed_line.score,
                     parsed_line.state,
@@ -138,6 +149,7 @@ fn render_line_wrapper(width: u32, top: bool) -> String {
 fn render_frame(
     grid: &RenderGrid,
     version: &String,
+    formatted_metadatas: &String,
     width: u32,
     score: u32,
     state: GameState,
@@ -173,7 +185,10 @@ fn render_frame(
         cursor::MoveToNextLine(1),
         style::Print(format!("Score: {} - {}     ", score, state)),
         cursor::MoveToNextLine(1),
-        style::Print(format!("[P] Pause [R] Restart [Ctrl+C] Quit")),
+        style::Print(format!(
+            "[P] Pause [R] Restart [Ctrl+C] Quit{}",
+            formatted_metadatas
+        )),
         cursor::MoveToNextLine(2),
         style::Print(format!("{}", version)),
     )
