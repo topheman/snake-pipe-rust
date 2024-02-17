@@ -20,6 +20,7 @@ pub struct InitOptions {
     pub snake_length: u32,
     pub size: SizeOption,
     pub features_with_version: std::collections::HashMap<String, String>,
+    pub metadatas: std::collections::HashMap<String, String>,
 }
 
 // gamestate
