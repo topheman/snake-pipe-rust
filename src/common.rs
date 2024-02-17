@@ -100,10 +100,16 @@ pub fn format_version(features_with_version: HashMap<String, String>) -> String 
 
 pub fn format_metadatas(
     metadatas: HashMap<String, String>,
-    frame_duration: u32,
-    size: SizeOption,
+    _frame_duration: u32,
+    _size: SizeOption,
 ) -> String {
-    return "Some metadatas".to_string();
+    let mut result: Vec<String> = Vec::new();
+    if let Some(value) = metadatas.get("throttled") {
+        if value == "on" {
+            result.push("Record mode".to_string());
+        }
+    }
+    return result.join(" / ");
 }
 
 #[cfg(test)]

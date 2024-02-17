@@ -183,12 +183,12 @@ fn render_frame(
         stdout,
         style::Print(render_line_wrapper(width, false)),
         cursor::MoveToNextLine(1),
-        style::Print(format!("Score: {} - {}     ", score, state)),
-        cursor::MoveToNextLine(1),
         style::Print(format!(
-            "[P] Pause [R] Restart [Ctrl+C] Quit{}",
-            formatted_metadatas
+            "Score: {} - {}{}",
+            score, state, formatted_metadatas
         )),
+        cursor::MoveToNextLine(1),
+        style::Print(format!("[P] Pause [R] Restart [Ctrl+C] Quit")),
         cursor::MoveToNextLine(2),
         style::Print(format!("{}", version)),
     )
