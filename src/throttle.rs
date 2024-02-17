@@ -1,12 +1,14 @@
 use std::time::{Duration, Instant};
 
 use crate::common::format_version_to_display;
-use crate::stream::parse_gamestate;
+use crate::stream::{parse_gamestate, Game};
 
 const FRAME_ACCURACY: Duration = Duration::from_millis(20);
 
-pub fn run(frame_duration: u32) {
+pub fn run(frame_duration: u32, loop_infinite: bool) {
     let frame_duration_millis = Duration::from_millis(frame_duration as u64);
+    let mut recording_buffer: Vec<Game> = Vec::new();
+    let mut replaying_index = 0;
     match parse_gamestate() {
         Ok(mut stream) => {
             let mut options_passthrough = stream.options.clone();
@@ -26,12 +28,28 @@ pub fn run(frame_duration: u32) {
                 }
                 if last_loop_duration > frame_duration_millis {
                     if let Some(parsed_line) = stream.lines.next() {
+                        recording_buffer.push(parsed_line.clone());
                         println!("{}\r", serde_json::to_string(&parsed_line).unwrap());
                         // adjust framerate
                         let remainder = last_loop_duration - frame_duration_millis;
                         last_loop_duration = remainder;
                     } else {
-                        std::process::exit(0);
+                        if !loop_infinite {
+                            std::process::exit(0);
+                        }
+                        replaying_index = if replaying_index < recording_buffer.len() {
+                            replaying_index
+                        } else {
+                            0
+                        };
+                        println!(
+                            "{}\r",
+                            serde_json::to_string(recording_buffer.get(replaying_index).unwrap())
+                                .unwrap()
+                        );
+                        replaying_index = replaying_index + 1;
+                        let remainder = last_loop_duration - frame_duration_millis;
+                        last_loop_duration = remainder;
                     }
                 }
                 last_loop_duration += start.elapsed();

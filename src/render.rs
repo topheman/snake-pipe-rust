@@ -184,7 +184,7 @@ fn render_frame(
         style::Print(render_line_wrapper(width, false)),
         cursor::MoveToNextLine(1),
         style::Print(format!(
-            "Score: {} - {}{}",
+            "Score: {} - {}{}     ",
             score, state, formatted_metadatas
         )),
         cursor::MoveToNextLine(1),

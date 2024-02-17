@@ -40,6 +40,8 @@ enum Commands {
         /// in ms
         #[arg(long, default_value_t = 120)]
         frame_duration: u32,
+        #[arg(long)]
+        loop_infinite: bool,
     },
 }
 
@@ -119,6 +121,9 @@ fn main() {
         Commands::Render => {
             render_run();
         }
-        Commands::Throttle { frame_duration } => throttle_run(*frame_duration),
+        Commands::Throttle {
+            frame_duration,
+            loop_infinite,
+        } => throttle_run(*frame_duration, *loop_infinite),
     }
 }
