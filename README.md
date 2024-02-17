@@ -99,6 +99,7 @@ Usage: snakepipe throttle [OPTIONS]
 
 Options:
       --frame-duration <FRAME_DURATION>  in ms [default: 120]
+      --loop-infinite
   </pre>
 </details>
 
