@@ -173,12 +173,8 @@ fn render_frame(
         cursor::MoveToNextLine(1),
         style::Print(format!("Score: {} - {}     ", score, state)),
         cursor::MoveToNextLine(1),
-        style::Print(format!("[P] Pause")),
-        cursor::MoveToNextLine(1),
-        style::Print(format!("[R] Restart")),
-        cursor::MoveToNextLine(1),
-        style::Print(format!("[Ctrl+C] Quit")),
-        cursor::MoveToNextLine(1),
+        style::Print(format!("[P] Pause [R] Restart [Ctrl+C] Quit")),
+        cursor::MoveToNextLine(2),
         style::Print(format!("{}", version)),
     )
     .unwrap();
