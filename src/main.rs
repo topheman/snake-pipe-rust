@@ -5,6 +5,7 @@ use snakepipe::common::format_version_to_display;
 use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::{InitOptions, SizeOption};
 use snakepipe::render::run as render_run;
+use snakepipe::render_browser::run as render_browser_run;
 use snakepipe::throttle::run as throttle_run;
 
 #[derive(Parser)]
@@ -42,6 +43,14 @@ enum Commands {
         frame_duration: u32,
         #[arg(long)]
         loop_infinite: bool,
+    },
+    RenderBrowser {
+        #[arg(long, default_value_t = 8080)]
+        port: u32,
+        #[arg(long)]
+        quiet: bool,
+        #[arg(long)]
+        open: bool,
     },
 }
 
@@ -125,5 +134,6 @@ fn main() {
             frame_duration,
             loop_infinite,
         } => throttle_run(*frame_duration, *loop_infinite),
+        Commands::RenderBrowser { port, quiet, open } => render_browser_run(*port, *quiet, *open),
     }
 }
