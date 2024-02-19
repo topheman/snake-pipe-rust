@@ -7,6 +7,7 @@ authors = ["Christophe Rosset"]
 keywords = ["cli", "game", "snake", "unix", "pipe"]
 description = "A snake game based on stdin/stdout following unix philosophy"
 license = "MIT"
+build = "build.rs"
 
 [[bin]]
 name = "snakepipe"
@@ -24,3 +25,8 @@ array2d = "0.3.0"
 ctrlc = "3.4.2"
 indexmap = "2.2.3"
 actix-web = "4.5.1"
+actix-web-static-files = "4.0.1"
+static-files = "0.2.3"
+
+[build-dependencies]
+static-files = "0.2.3"
