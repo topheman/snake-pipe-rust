@@ -1,14 +1,15 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpServer};
+use actix_web_static_files::ResourceFiles;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[actix_web::main]
 pub async fn launch_server() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(hello))
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+    HttpServer::new(move || {
+        let generated = generate();
+        App::new().service(ResourceFiles::new("/", generated))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
