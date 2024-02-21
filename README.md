@@ -29,7 +29,7 @@ cargo install snakepipe
 
 ## Usage
 
-🎮 Play in terminal
+### 🎮 Play in terminal
 
 ```sh
 # basic usage
@@ -42,15 +42,31 @@ snakepipe gamestate --frame-duration 80 --width 70 --height 20 --snakepipe-lengt
 snakepipe --help
 ```
 
-📼 You can even record and replay using basic piping
+### 📼 You can even record and replay using basic piping
 
 ```sh
-# record a game into a file using the `tee` command utility
+# record a game into a file using the builtin `tee` command utility
 snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
 
 # replay the game you recorded
 cat /tmp/snakepipe-output|snakepipe throttle|snakepipe render
 ```
+
+### 📺 You can also mirror your playing terminal into another one
+
+Open two terminals that will communicate via a file that will be `tail`ed and piped to `snakepipe render`
+
+```sh
+# mirroring terminal
+cat /dev/null > /tmp/snakepipe.sock && tail -f /tmp/snakepipe.sock|snakepipe render
+```
+
+```sh
+# main terminal
+snakepipe gamestate|tee /tmp/snakepipe.sock|snakepipe render
+```
+
+### 😉 And maybe you'll find other ways?...
 
 ## Manual of commands
 
