@@ -11,5 +11,18 @@
 <body>
   <h1>render-browser</h1>
   <p>This will contain the browser rendered game.</p>
+  <div id="root"></div>
+  <script>
+      let root = document.getElementById("root");
+      let events = new EventSource("/events");
+      events.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          console.log("event", data);
+          let node = document.createElement("p");
+          let time = new Date().toLocaleTimeString();
+          node.innerText = `${time} - x: ${data.snake.head.x} / y: ${data.snake.head.y}`
+          root.appendChild(node);
+      }
+  </script>
 </body>
 </html>
