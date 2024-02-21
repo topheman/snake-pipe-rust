@@ -80,16 +80,16 @@ pub struct Game {
 /// - returns an iterator of [`Game`] inside `lines` (already parsed)
 ///
 /// Used by [`parse_gamestate`] under the hood.
-pub struct Stream {
+pub struct Input {
     pub options: InitOptions,
     pub lines: Box<dyn Iterator<Item = Game>>, // std::io::Lines<T>, //Lines<T>,
 }
 
-impl Stream {
-    /// Creates a stream from a buffer (could be from [`std::io::stdin()`]`.line()`)
+impl Input {
+    /// Creates a input from a buffer (could be from [`std::io::stdin()`]`.line()`)
     pub fn new<T: BufRead + 'static>(
         mut lines: Lines<T>,
-    ) -> Result<Stream, Box<dyn std::error::Error>> {
+    ) -> Result<Input, Box<dyn std::error::Error>> {
         match lines.next() {
             Some(Ok(first_line)) => {
                 let options: InitOptions = serde_json::from_str(&first_line)?;
@@ -112,23 +112,23 @@ impl Stream {
     }
 }
 
-/// Parses a gamestate streamed into stdin
+/// Parses the stdin containing the gamestate
 ///
 /// Example:
 /// ```
-/// use snakepipe::stream::{parse_gamestate, Game};
+/// use snakepipe::input::{parse_gamestate, Game};
 ///
 /// fn main() -> () {
 ///     match parse_gamestate() {
-///         Ok(stream) => {
+///         Ok(input) => {
 ///             println!(
 ///                 "Frame duration {}, Snake length {}, Level {}x{}",
-///                 stream.options.frame_duration,
-///                 stream.options.snake_length,
-///                 stream.options.size.width,
-///                 stream.options.size.height
+///                 input.options.frame_duration,
+///                 input.options.snake_length,
+///                 input.options.size.width,
+///                 input.options.size.height
 ///             );
-///             for parsed_line in stream.lines {
+///             for parsed_line in input.lines {
 ///                 do_something(parsed_line);
 ///             }
 ///         }
@@ -143,10 +143,10 @@ impl Stream {
 /// }
 /// ```
 ///
-/// If you want to parse from elsewhere than stdin, you can use [Stream]
-pub fn parse_gamestate() -> Result<Stream, Box<dyn std::error::Error>> {
-    // todo couldn't find how to peek into the stream (to know if it comes from `snake gamestate` or `cat /some-file`), without consuming it
+/// If you want to parse from elsewhere than stdin, you can use [Input]
+pub fn parse_gamestate() -> Result<Input, Box<dyn std::error::Error>> {
+    // todo couldn't find how to peek into the input (to know if it comes from `snake gamestate` or `cat /some-file`), without consuming it
     // so we'll show a "Replay" message when `gamestate throttle` is used in the pipeline (even if it could only be used to throttle directly `gamestate`)
     let lines = stdin().lines();
-    Stream::new(lines)
+    Input::new(lines)
 }
