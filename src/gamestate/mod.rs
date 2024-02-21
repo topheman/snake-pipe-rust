@@ -7,7 +7,7 @@ use std::time::{Duration, Instant};
 use crossterm::event::{poll, read};
 
 use crate::gamestate::game::GameState;
-use crate::stream::InitOptions;
+use crate::input::InitOptions;
 
 /**
  * This function is the update loop.

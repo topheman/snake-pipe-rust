@@ -1,7 +1,7 @@
 use indexmap::map::IndexMap; // we need IndexMap to have deterministic order of keys when `.iter()`
 use std::collections::HashMap;
 
-use crate::stream::SizeOption;
+use crate::input::SizeOption;
 use clap::crate_version;
 
 /// Returns the name of the crate with the version in the `Cargo.toml`
@@ -9,7 +9,7 @@ pub fn format_version_to_display() -> String {
     format!("snakepipe@{}(rust)", crate_version!())
 }
 
-/// Takes in [`crate::stream::InitOptions::features_with_version`] and extracts a HashMap with
+/// Takes in [`crate::input::InitOptions::features_with_version`] and extracts a HashMap with
 /// - keys: versions
 /// - values: vector of string of features
 ///
@@ -91,7 +91,7 @@ pub fn format_version_with_features(
     return couple_version_features.join(" - ");
 }
 
-/// Takes in [`crate::stream::InitOptions::features_with_version`] and formats it to a string
+/// Takes in [`crate::input::InitOptions::features_with_version`] and formats it to a string
 ///
 /// Composes [extract_versions_with_features] and [format_version_with_features].
 pub fn format_version(features_with_version: HashMap<String, String>) -> String {

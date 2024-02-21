@@ -3,8 +3,8 @@ use crossterm;
 
 use snakepipe::common::format_version_to_display;
 use snakepipe::gamestate::run as gamestate_run;
+use snakepipe::input::{InitOptions, SizeOption};
 use snakepipe::render::run as render_run;
-use snakepipe::stream::{InitOptions, SizeOption};
 use snakepipe::throttle::run as throttle_run;
 
 #[derive(Parser)]

@@ -2,7 +2,7 @@ use ctrlc;
 use std::io::Write;
 
 use crate::common::{format_metadatas, format_version};
-use crate::stream::{parse_gamestate, Direction as StreamDirection, Game, GameState};
+use crate::input::{parse_gamestate, Direction as InputDirection, Game, GameState};
 use array2d::Array2D;
 use crossterm::{cursor, queue, style, terminal};
 
@@ -14,13 +14,13 @@ enum Direction {
     Left,
 }
 
-impl From<StreamDirection> for Direction {
-    fn from(value: StreamDirection) -> Self {
+impl From<InputDirection> for Direction {
+    fn from(value: InputDirection) -> Self {
         match value {
-            StreamDirection::Up => Direction::Up,
-            StreamDirection::Down => Direction::Down,
-            StreamDirection::Left => Direction::Left,
-            StreamDirection::Right => Direction::Right,
+            InputDirection::Up => Direction::Up,
+            InputDirection::Down => Direction::Down,
+            InputDirection::Left => Direction::Left,
+            InputDirection::Right => Direction::Right,
         }
     }
 }
@@ -51,7 +51,7 @@ impl RenderGrid {
 
 pub fn run() {
     match parse_gamestate() {
-        Ok(stream) => {
+        Ok(input) => {
             ctrlc::set_handler(|| {
                 // cleanup on ctrl+c
                 queue!(
@@ -65,11 +65,11 @@ pub fn run() {
             })
             .expect("Could not send signal on channel.");
 
-            let version = format_version(stream.options.features_with_version);
+            let version = format_version(input.options.features_with_version);
             let formatted_metadatas = format_metadatas(
-                stream.options.metadatas,
-                stream.options.frame_duration,
-                stream.options.size,
+                input.options.metadatas,
+                input.options.frame_duration,
+                input.options.size,
             );
             let formatted_metadatas = if formatted_metadatas.is_empty() {
                 "".to_string()
@@ -86,22 +86,21 @@ pub fn run() {
                 cursor::SavePosition,
             )
             .unwrap();
-            for parsed_line in stream.lines {
-                let mut grid =
-                    RenderGrid::new(stream.options.size.width, stream.options.size.height);
+            for parsed_line in input.lines {
+                let mut grid = RenderGrid::new(input.options.size.width, input.options.size.height);
                 prepare_grid(&mut grid, parsed_line.clone());
                 render_frame(
                     &grid,
                     &version,
                     &formatted_metadatas,
-                    stream.options.size.width,
+                    input.options.size.width,
                     parsed_line.score,
                     parsed_line.state,
                     &mut stdout,
                 );
                 stdout.flush().unwrap();
             }
-            // once there is no more stream (maybe ctrl-c), show the cursor back
+            // once there is no more lines (maybe ctrl-c), show the cursor back
             queue!(
                 stdout,
                 cursor::RestorePosition,

@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use crate::common::format_version_to_display;
-use crate::stream::{parse_gamestate, Game};
+use crate::input::{parse_gamestate, Game};
 
 const FRAME_ACCURACY: Duration = Duration::from_millis(20);
 
@@ -10,8 +10,8 @@ pub fn run(frame_duration: u32, loop_infinite: bool) {
     let mut recording_buffer: Vec<Game> = Vec::new();
     let mut replaying_index = 0;
     match parse_gamestate() {
-        Ok(mut stream) => {
-            let mut options_passthrough = stream.options.clone();
+        Ok(mut input) => {
+            let mut options_passthrough = input.options.clone();
             options_passthrough.frame_duration = frame_duration;
             options_passthrough
                 .features_with_version
@@ -27,7 +27,7 @@ pub fn run(frame_duration: u32, loop_infinite: bool) {
                     std::hint::spin_loop();
                 }
                 if last_loop_duration > frame_duration_millis {
-                    if let Some(parsed_line) = stream.lines.next() {
+                    if let Some(parsed_line) = input.lines.next() {
                         recording_buffer.push(parsed_line.clone());
                         println!("{}\r", serde_json::to_string(&parsed_line).unwrap());
                         // adjust framerate
