@@ -27,6 +27,11 @@ indexmap = "2.2.3"
 actix-web = "4.5.1"
 actix-web-static-files = "4.0.1"
 static-files = "0.2.3"
+futures-util = "0.3.30"
+parking_lot = "0.12.1"
+tokio = "1.36.0"
+tokio-stream = "0.1.14"
+actix-web-lab = "0.20.2"
 
 [build-dependencies]
 static-files = "0.2.3"
