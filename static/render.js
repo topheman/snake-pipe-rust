@@ -1,5 +1,10 @@
 /**
+ * Basic render function
  *
+ * @param {{
+    width: number
+    height: number
+  }} size
  * @param {{
   snake: {
     direction: string
@@ -18,11 +23,19 @@
 }} frameInfos
  * @param {HTMLElement} rootNode
  */
-function renderFrame(frameInfos, rootNode) {
-  let node = document.createElement("p");
-  let time = new Date().toLocaleTimeString();
-  node.innerText = `${time} - x: ${frameInfos.snake.head.x} / y: ${frameInfos.snake.head.y}`
-  rootNode.insertAdjacentElement("afterbegin", node);
+function renderFrame(size, frameInfos, rootNode) {
+  const buffer = [];
+  for (let i = 0; i < size.width; i++) {
+    buffer.push(Array.from({ length: size.height }, () => ' '));
+  }
+  buffer[frameInfos.snake.head.y][frameInfos.snake.head.x] = 'H';
+  buffer[frameInfos.fruit.y][frameInfos.fruit.x] = 'F';
+  frameInfos.snake.tail.forEach(tailFragment => {
+    buffer[tailFragment.y][tailFragment.x] = 'T';
+  })
+  console.log(buffer);
+  const rendered = buffer.map(row => `${row.join('')}`).join('\r\n');
+  rootNode.textContent = rendered;
 }
 
 /**
@@ -39,22 +52,25 @@ function renderFrame(frameInfos, rootNode) {
  * @param {HTMLElement} node
  */
 function setup(initOptions, node) {
-  let time = new Date().toLocaleTimeString();
-  node.innerText = `${time} - Size: ${initOptions.size.width}x${initOptions.size.height}`
+  node.style.width = `${initOptions.size.width}ch`;
+  node.style.height = `calc(${node.style.lineHeight}*${initOptions.size.height})`;
+  return initOptions;
 }
 
 ((global) => {
-  const rootNode = document.getElementById("root");
-  const optionsNode = document.getElementById("options");
+  const gameScreen = document.getElementById("game-screen");
+  let initOptions = null;
   function process(eventName, payload) {
     switch (eventName) {
       case 'connected':
         console.log("connected", payload);
-        setup(payload, optionsNode);
+        initOptions = setup(payload, gameScreen);
         break;
       case 'event':
         console.log("event", payload);
-        renderFrame(payload, rootNode);
+        if (initOptions) {
+          renderFrame(initOptions.size, payload, gameScreen);
+        }
         break
       default:
         console.error(`Usupported "${eventName}" event`);
