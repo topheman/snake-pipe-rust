@@ -1,10 +1,10 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-use actix_web::{get, web, App, HttpServer, Responder};
+use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use actix_web_static_files::ResourceFiles;
 
-use crate::input::Game;
+use crate::input::{Game, InitOptions};
 use crate::render_browser::broadcast::Broadcaster;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
@@ -29,16 +29,28 @@ async fn event_stream(broadcaster: web::Data<Broadcaster>) -> impl Responder {
     broadcaster.new_client().await
 }
 
+#[get("/init-options")]
+async fn get_init_options(init_options: web::Data<InitOptions>) -> impl Responder {
+    let result = serde_json::to_string(&init_options).unwrap();
+    HttpResponse::Ok().json(result)
+}
+
 #[actix_web::main]
-pub async fn launch_server(lines: Box<dyn Iterator<Item = Game>>) -> std::io::Result<()> {
+pub async fn launch_server(
+    lines: Box<dyn Iterator<Item = Game>>,
+    init_options: InitOptions,
+) -> std::io::Result<()> {
     let broadcaster = Broadcaster::create();
     let broadcaster_clone = broadcaster.clone();
+    let rc_init_options = Arc::new(init_options);
 
     let server = HttpServer::new(move || {
         let generated = generate();
         App::new()
             .app_data(web::Data::from(Arc::clone(&broadcaster)))
+            .app_data(web::Data::from(Arc::clone(&rc_init_options)))
             .service(event_stream)
+            .service(get_init_options)
             .service(ResourceFiles::new("/", generated))
     })
     .bind(("127.0.0.1", 8080))?

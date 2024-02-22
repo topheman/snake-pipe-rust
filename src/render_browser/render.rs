@@ -14,7 +14,7 @@ pub fn run(port: u32, _quiet: bool, _open: bool) {
                 format!("http://localhost:{}", port).to_string(),
             );
             println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
-            let _ = launch_server(input.lines);
+            let _ = launch_server(input.lines, options_passthrough);
         }
         Err(_) => todo!(),
     }
