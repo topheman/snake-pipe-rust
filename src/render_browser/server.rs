@@ -1,4 +1,3 @@
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
@@ -9,15 +8,8 @@ use crate::render_browser::broadcast::Broadcaster;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
-async fn do_broadcast_task(
-    shutdown_marker: Arc<AtomicBool>,
-    broadcaster: Arc<Broadcaster>,
-    lines: Box<dyn Iterator<Item = Game>>,
-) {
+async fn do_broadcast_task(broadcaster: Arc<Broadcaster>, lines: Box<dyn Iterator<Item = Game>>) {
     for line in lines {
-        if shutdown_marker.load(Ordering::SeqCst) {
-            break;
-        }
         let msg = serde_json::to_string(&line).unwrap();
         println!("{}\r", &msg);
         broadcaster.broadcast(&msg).await;
@@ -54,33 +46,13 @@ pub async fn launch_server(
             .service(ResourceFiles::new("/", generated))
     })
     .bind(("127.0.0.1", 8080))?
-    .disable_signals()
     .run();
-
-    let server_handle = server.handle();
-    let task_shutdown_marker = Arc::new(AtomicBool::new(false));
 
     let server_task = actix_web::rt::spawn(server);
 
-    let broadcast_task = actix_web::rt::spawn(do_broadcast_task(
-        Arc::clone(&task_shutdown_marker),
-        broadcaster_clone,
-        lines,
-    ));
+    let broadcast_task = actix_web::rt::spawn(do_broadcast_task(broadcaster_clone, lines));
 
-    let shutdown = actix_web::rt::spawn(async move {
-        // listen for ctrl-c
-        actix_web::rt::signal::ctrl_c().await.unwrap();
-
-        // start shutdown of tasks
-        let server_stop = server_handle.stop(true);
-        task_shutdown_marker.store(true, Ordering::SeqCst);
-
-        // await shutdown of tasks
-        server_stop.await;
-    });
-
-    let _ = tokio::try_join!(server_task, broadcast_task, shutdown).expect("Unable to join tasks");
+    let _ = tokio::try_join!(server_task, broadcast_task).expect("Unable to join tasks");
 
     Ok(())
 }
