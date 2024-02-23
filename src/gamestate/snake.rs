@@ -50,9 +50,9 @@ impl Snake {
         } else if self.head.y >= width as i32 {
             self.head.y = 0;
         } else if self.head.y < 0 {
-            self.head.y = width as i32;
+            self.head.y = (width - 1) as i32;
         } else if self.head.x < 0 {
-            self.head.x = height as i32;
+            self.head.x = (height - 1) as i32;
         }
 
         self.updated_tail_pos = true;
