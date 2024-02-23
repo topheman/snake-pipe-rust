@@ -6,12 +6,23 @@
   <title>snakepipe render-browser</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+  <script src="main.js" type="module"></script>
 </head>
 <body>
   <h1>render-browser</h1>
-  <p>This is a basic renderer for the moment.</p>
-  <pre id="game-screen"></pre>
-  <script src='common.js'></script>
-  <script src='render.js'></script>
+  <p>Choose your renderer</p>
+  <form id="renderer-switcher">
+    <ul>
+      <li>
+        <input type="radio" name="rendererName" value="basic" id="renderName-basic" checked/>
+        <label for="renderName-basic">Basic</label>
+      </li>
+      <li>
+        <input type="radio" name="rendererName" value="log" id="renderName-log"/>
+        <label for="renderName-log">Log</label>
+      </li>
+    </ul>
+  </form>
+  <div id="root"></div>
 </body>
 </html>
