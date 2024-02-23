@@ -6,8 +6,8 @@
 export function renderFrame(size, frameInfos, context) {
   console.log("basic > renderFrame");
   const buffer = [];
-  for (let i = 0; i < size.width; i++) {
-    buffer.push(Array.from({ length: size.height }, () => ' '));
+  for (let i = 0; i < size.height; i++) {
+    buffer.push(Array.from({ length: size.width }, () => '·'));
   }
   buffer[frameInfos.snake.head.y][frameInfos.snake.head.x] = 'H';
   buffer[frameInfos.fruit.y][frameInfos.fruit.x] = 'F';
