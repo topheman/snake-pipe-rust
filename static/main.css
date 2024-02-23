@@ -1,6 +1,19 @@
 h1,h2,h3,h4,h5,h6,a {
   color: #900000;
 }
+body {
+  font-family: Arial,Helvetica,sans-serif;
+}
+.renderer-switcher-wrapper {
+  display: flex;
+}
+#renderer-switcher ul {
+  display: flex;
+  padding-left: 0;
+}
+#renderer-switcher li {
+  list-style: none;
+}
 #basic pre {
   border: 1px solid #900000;
   font-family: 'Courier New', Courier, monospace;
