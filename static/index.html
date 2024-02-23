@@ -10,19 +10,21 @@
 </head>
 <body>
   <h1>render-browser</h1>
-  <p>Choose your renderer</p>
-  <form id="renderer-switcher">
-    <ul>
-      <li>
-        <input type="radio" name="rendererName" value="basic" id="renderName-basic" checked/>
-        <label for="renderName-basic">Basic</label>
-      </li>
-      <li>
-        <input type="radio" name="rendererName" value="log" id="renderName-log"/>
-        <label for="renderName-log">Log</label>
-      </li>
-    </ul>
-  </form>
+  <div class="renderer-switcher-wrapper">
+    <p>Choose your renderer:</p>
+    <form id="renderer-switcher">
+      <ul>
+        <li>
+          <input type="radio" name="rendererName" value="basic" id="renderName-basic" checked/>
+          <label for="renderName-basic">Basic</label>
+        </li>
+        <li>
+          <input type="radio" name="rendererName" value="inspect" id="renderName-inspect"/>
+          <label for="renderName-inspect">Inspect</label>
+        </li>
+      </ul>
+    </form>
+  </div>
   <div id="root"></div>
 </body>
 </html>
