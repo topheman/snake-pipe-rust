@@ -86,13 +86,13 @@ impl Game {
             }
 
             if !self.snake.is_tail_overlapping() && !self.snake.will_tail_overlapp() {
-                self.snake.update(self.size.0, self.size.1); // todo check inverted params
-
                 if *self.snake.get_head_pos() == self.fruit {
                     self.snake.grow();
                     self.snake.update(self.size.0, self.size.1);
                     self.fruit = calc_random_pos(self.size.0, self.size.1);
                     self.calc_score();
+                } else {
+                    self.snake.update(self.size.0, self.size.1);
                 }
             } else {
                 self.state = GameState::Over;
