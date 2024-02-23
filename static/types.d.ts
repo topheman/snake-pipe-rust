@@ -38,7 +38,7 @@ export type SetupFunction = (initOptions: InitOptions, gameNode: HTMLElement) =>
   cleanup: () => {}
 }
 
-export type RenderFrameFunction = (size: Size, frameInfos: Game, context: any) => {}
+export type RenderFrameFunction = (size: InitOptions, frameInfos: Game, context: any) => {}
 
 export type Renderer = {
   setup: SetupFunction,
