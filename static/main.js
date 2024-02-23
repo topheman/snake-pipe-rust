@@ -57,7 +57,7 @@ async function fetchInitOptions() {
  *
  * @param {(eventName: 'connected' | 'event', payload: any) => void} cb
  */
-export async function bootstrap(cb) {
+async function bootstrap(cb) {
   const events = new EventSource("/events");
   events.onmessage = (event) => {
     if (event.data === 'connected') {
@@ -116,13 +116,16 @@ function onUpdateRender(cb) {
  * @param {import("./types").SetupFunction} setup
  * @param {import("./types").RenderFrameFunction} renderFrame
  */
-export async function prepareGame() {
+async function prepareGame() {
   const rootNode = document.getElementById('root');
   prepareRootNode("loading", rootNode);
+  /** @type {HTMLElement} */
   let gameNode = null;
+  /** @type {import("./types").Renderer | null} */
   let currentRenderer = null;
   let currentRendererContext = null;
   let currentCleanupFunction = null;
+  /** @type {import("./types").InitOptions | null} */
   let currentInitOptions = null;
 
   /**
@@ -159,7 +162,7 @@ export async function prepareGame() {
       case 'event':
         console.log("event", payload);
         if (currentInitOptions) {
-          currentRenderer.renderFrame(currentInitOptions.size, payload, currentRendererContext);
+          currentRenderer.renderFrame(currentInitOptions, payload, currentRendererContext);
         }
         break
       default:

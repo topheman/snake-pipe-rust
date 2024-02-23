@@ -1,6 +1,10 @@
 h1,h2,h3,h4,h5,h6,a {
   color: #900000;
 }
+h1,p,ul {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 body {
   font-family: Arial,Helvetica,sans-serif;
 }
@@ -18,4 +22,12 @@ body {
   border: 1px solid #900000;
   font-family: 'Courier New', Courier, monospace;
   line-height: 16px;
+}
+#basic-infos {
+  list-style: none;
+  padding-left: 0;
+}
+#inspect-infos {
+  list-style: none;
+  padding-left: 0;
 }
