@@ -155,3 +155,4 @@ fn do_something(parsed_line: Game) {
 
 - [ ] Make an implementation of the `render` command that starts a server so that the render happens in a browser
 - [ ] Make an implementation of the actual `render` for the terminal in an other language than rust
+- Experimental/Partial nodejs implementation of this crate available at [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node)
