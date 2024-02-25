@@ -11,6 +11,7 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 - `snakepipe gamestate` accepts user inputs, calculates the state of the game and writes it to `stdout`
 - `snakepipe render` reads the state of the game from `stdin` and renders it on the terminal
 - `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
+- `snakepipe render-browser` spawns a server and sends `stdin` via server-sent-events to a JavaScript renderer in your browser
 
 That way:
 
@@ -66,6 +67,14 @@ cat /dev/null > /tmp/snakepipe.sock && tail -f /tmp/snakepipe.sock|snakepipe ren
 snakepipe gamestate|tee /tmp/snakepipe.sock|snakepipe render
 ```
 
+### 🖥 You can mirror your playing terminal into a server you can open in a browser
+
+```sh
+snakepipe gamestate|snakepipe render-browser|snakepipe render
+```
+
+Then open [http://localhost:8080](http://localhost:8080). You'll be able to switch between renderers in your browser as you are playing in your terminal (thanks to server-sent-events).
+
 ### 😉 And maybe you'll find other ways?...
 
 ## Manual of commands
@@ -116,6 +125,16 @@ Usage: snakepipe throttle [OPTIONS]
 Options:
       --frame-duration <FRAME_DURATION>  in ms [default: 120]
       --loop-infinite
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe render-browser --help</code></summary>
+  <pre>
+Usage: snakepipe render-browser [OPTIONS]
+
+Options:
+      --port \<PORT>  [default: 8080]
   </pre>
 </details>
 
