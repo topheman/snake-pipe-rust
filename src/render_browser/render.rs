@@ -2,7 +2,7 @@ use crate::common::format_version_to_display;
 use crate::input::parse_gamestate;
 use crate::render_browser::server::launch_server;
 
-pub fn run(port: u32, _quiet: bool, _open: bool) {
+pub fn run(port: u16) {
     match parse_gamestate() {
         Ok(input) => {
             let mut options_passthrough = input.options.clone();
@@ -14,7 +14,7 @@ pub fn run(port: u32, _quiet: bool, _open: bool) {
                 format!("http://localhost:{}", port).to_string(),
             );
             println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
-            let _ = launch_server(input.lines, options_passthrough);
+            let _ = launch_server(input.lines, options_passthrough, port);
         }
         Err(_) => todo!(),
     }
