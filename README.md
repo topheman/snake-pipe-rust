@@ -14,7 +14,7 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 
 That way:
 
-- you could write your own version of the `gamestate` or `render` command in any programming language and make it work with mine
+- you could write your own version of the `gamestate` or `render` command in any programming language and make it work with mine, like this one in nodejs: [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node)
 - it's a great exercise to handle stream serialization/deserialization in rust
 
 ## Prerequisites
