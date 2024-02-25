@@ -46,11 +46,7 @@ enum Commands {
     },
     RenderBrowser {
         #[arg(long, default_value_t = 8080)]
-        port: u32,
-        #[arg(long)]
-        quiet: bool,
-        #[arg(long)]
-        open: bool,
+        port: u16,
     },
 }
 
@@ -134,6 +130,6 @@ fn main() {
             frame_duration,
             loop_infinite,
         } => throttle_run(*frame_duration, *loop_infinite),
-        Commands::RenderBrowser { port, quiet, open } => render_browser_run(*port, *quiet, *open),
+        Commands::RenderBrowser { port } => render_browser_run(*port),
     }
 }
