@@ -109,6 +109,9 @@ pub fn format_metadatas(
             result.push("Record mode".to_string());
         }
     }
+    if let Some(value) = metadatas.get("render-browser-host") {
+        result.push(format!("Mirrored on {}", value));
+    }
     return result.join(" / ");
 }
 
