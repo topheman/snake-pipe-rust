@@ -31,6 +31,7 @@ async fn get_init_options(init_options: web::Data<InitOptions>) -> impl Responde
 pub async fn launch_server(
     lines: Box<dyn Iterator<Item = Game>>,
     init_options: InitOptions,
+    port: u16,
 ) -> std::io::Result<()> {
     let broadcaster = Broadcaster::create();
     let broadcaster_clone = broadcaster.clone();
@@ -45,7 +46,7 @@ pub async fn launch_server(
             .service(get_init_options)
             .service(ResourceFiles::new("/", generated))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", port))?
     .run();
 
     let server_task = actix_web::rt::spawn(server);
