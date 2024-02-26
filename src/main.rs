@@ -6,6 +6,7 @@ use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::{InitOptions, SizeOption};
 use snakepipe::render::run as render_run;
 use snakepipe::render_browser::run as render_browser_run;
+use snakepipe::stream_sse::run as stream_sse_run;
 use snakepipe::throttle::run as throttle_run;
 
 #[derive(Parser)]
@@ -47,6 +48,10 @@ enum Commands {
     RenderBrowser {
         #[arg(long, default_value_t = 8080)]
         port: u16,
+    },
+    StreamSse {
+        #[arg(long, default_value = "http://localhost:8080")]
+        address: String,
     },
 }
 
@@ -131,5 +136,6 @@ fn main() {
             loop_infinite,
         } => throttle_run(*frame_duration, *loop_infinite),
         Commands::RenderBrowser { port } => render_browser_run(*port),
+        Commands::StreamSse { address } => stream_sse_run(address.to_string()),
     }
 }
