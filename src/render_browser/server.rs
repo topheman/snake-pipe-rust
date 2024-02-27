@@ -45,7 +45,7 @@ pub async fn launch_server(
             .service(get_init_options)
             .service(ResourceFiles::new("/", generated))
     })
-    .bind(("127.0.0.1", port))?
+    .bind(("0.0.0.0", port))?
     .run();
 
     let server_task = actix_web::rt::spawn(server);
