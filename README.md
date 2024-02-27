@@ -12,6 +12,7 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 - `snakepipe render` reads the state of the game from `stdin` and renders it on the terminal
 - `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
 - `snakepipe render-browser` spawns a server and sends `stdin` via server-sent-events to a JavaScript renderer in your browser
+- `snakepipe stream-sse` connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
 
 That way:
 
@@ -75,6 +76,27 @@ snakepipe gamestate|snakepipe render-browser|snakepipe render
 
 Then open [http://localhost:8080](http://localhost:8080). You'll be able to switch between renderers in your browser as you are playing in your terminal (thanks to server-sent-events).
 
+### 🖼 You can mirror your playing terminal into another one, through http
+
+Open two terminals:
+
+```sh
+# main terminal:
+# - accepts user inputs
+# - spawns an http server that streams stdin to server-sent-events
+# - renders the game to the terminal so you can play
+snakepipe gamestate|snakepipe render-browser|snakepipe render
+```
+
+```sh
+# mirroring terminal (not necessary the same device, only need to be on the same network):
+# - connects to the http server and streams server-sent-events to sdout
+# - render the gamestate retrieved from the server
+snakepipe stream-sse|snakepipe render
+```
+
+You could share your game accross your LAN!
+
 ### 😉 And maybe you'll find other ways?...
 
 ## Manual of commands
@@ -135,6 +157,18 @@ Usage: snakepipe render-browser [OPTIONS]
 
 Options:
       --port \<PORT>  [default: 8080]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe stream-sse --help</code></summary>
+  <pre>
+Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+
+Usage: snakepipe stream-sse [OPTIONS]
+
+Options:
+      --address \<ADDRESS>  [default: http://localhost:8080]
   </pre>
 </details>
 
