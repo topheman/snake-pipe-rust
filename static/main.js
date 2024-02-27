@@ -62,7 +62,7 @@ async function bootstrap(cb) {
   events.onmessage = (event) => {
     if (event.data === 'connected') {
       fetchInitOptions().then(initOptions => {
-        cb('connected', JSON.parse(initOptions));
+        cb('connected', initOptions);
       })
     }
     else {
