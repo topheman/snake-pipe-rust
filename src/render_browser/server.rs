@@ -23,8 +23,7 @@ async fn event_stream(broadcaster: web::Data<Broadcaster>) -> impl Responder {
 
 #[get("/init-options")]
 async fn get_init_options(init_options: web::Data<InitOptions>) -> impl Responder {
-    let result = serde_json::to_string(&init_options).unwrap();
-    HttpResponse::Ok().json(result)
+    HttpResponse::Ok().json(init_options)
 }
 
 #[actix_web::main]
