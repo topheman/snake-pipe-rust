@@ -49,6 +49,7 @@ enum Commands {
         #[arg(long, default_value_t = 8080)]
         port: u16,
     },
+    /// Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
     StreamSse {
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
