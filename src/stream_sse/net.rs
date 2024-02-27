@@ -30,7 +30,13 @@ pub async fn bootstrap(address: String) {
                     }
                 }
             }
-            Err(_) => todo!(),
+            Err(_) => {
+                // for the moment, keep the console clean
+                // eprintln!(
+                //     "Cannot connect to {}. Please check the server is up. Retrying ...",
+                //     address
+                // )
+            }
         }
     }
 }
