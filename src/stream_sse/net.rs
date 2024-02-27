@@ -19,14 +19,14 @@ pub async fn bootstrap(address: String) {
             // what if the sse re-opens with different init_options ? we can't support for the moment - message parsers should ignore the header line
             Ok(Event::Open) => {
                 if let Ok(init_options) = fetch_init_options(&address).await {
-                    println!("{}\n", serde_json::to_string(&init_options).unwrap());
+                    println!("{}", serde_json::to_string(&init_options).unwrap());
                     current_init_options = Some(init_options);
                 }
             }
             Ok(Event::Message(message)) => {
                 if current_init_options.is_some() {
                     if let Ok(game_state) = serde_json::from_str::<Game>(&message.data) {
-                        println!("{}\n", serde_json::to_string(&game_state).unwrap());
+                        println!("{}", serde_json::to_string(&game_state).unwrap());
                     }
                 }
             }
