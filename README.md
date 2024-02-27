@@ -103,14 +103,18 @@ You could share your game accross your LAN!
 
 <details>
   <summary><code>snakepipe --help</code></summary>
-  <pre>
-Usage: snakepipe <CMD_>
+  <pre>A snake game based on stdin/stdout following unix philosophy
+
+Usage: snakepipe \<COMMAND>
 
 Commands:
-  gamestate
-  render
-  throttle
-  help       Print this message or the help of the given subcommand(s)
+
+  gamestate       Accepts user inputs (arrow keys to control the snake) and outputs the state of the game to stdout
+  render          Reads gamestate from stdin and renders the game on your terminal
+  throttle        Reads stdin line by line and outputs each line on stdout each `frame_duration` ms (usefull for replaying a file)
+  render-browser  Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
+  stream-sse      Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+  help            Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help
@@ -120,14 +124,15 @@ Options:
 
 <details>
   <summary><code>snakepipe gamestate --help</code></summary>
-  <pre>
+  <pre>Accepts user inputs (arrow keys to control the snake) and outputs the state of the game to stdout
+
 Usage: snakepipe gamestate [OPTIONS]
 
 Options:
-      --frame-duration <FRAME_DURATION>  in ms [default: 120]
-      --width <WIDTH_>                    default 25
-      --height <HEIGHT_>                  default 25
-      --snakepipe-length <snakepipe_LENGTH>      [default: 2]
+      --frame-duration \<FRAME_DURATION>  in ms [default: 120]
+      --width \<WIDTH>                    default 25
+      --height \<HEIGHT>                  default 25
+      --snake-length \<SNAKE_LENGTH>      [default: 2]
       --fit-terminal
   </pre>
 </details>
@@ -135,6 +140,8 @@ Options:
 <details>
   <summary><code>snakepipe render --help</code></summary>
   <pre>
+Reads gamestate from stdin and renders the game on your terminal
+
 Usage: snakepipe render
   </pre>
 </details>
@@ -142,10 +149,12 @@ Usage: snakepipe render
 <details>
   <summary><code>snakepipe throttle --help</code></summary>
   <pre>
+Reads stdin line by line and outputs each line on stdout each `frame_duration` ms (usefull for replaying a file)
+
 Usage: snakepipe throttle [OPTIONS]
 
 Options:
-      --frame-duration <FRAME_DURATION>  in ms [default: 120]
+      --frame-duration \<FRAME_DURATION>  in ms [default: 120]
       --loop-infinite
   </pre>
 </details>
@@ -153,10 +162,12 @@ Options:
 <details>
   <summary><code>snakepipe render-browser --help</code></summary>
   <pre>
+Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
+
 Usage: snakepipe render-browser [OPTIONS]
 
 Options:
-      --port \<PORT>  [default: 8080]
+      --port <PORT>  [default: 8080]
   </pre>
 </details>
 

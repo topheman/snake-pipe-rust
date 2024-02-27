@@ -22,6 +22,7 @@ const DEFAULT_HEIGHT: u32 = 25;
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Accepts user inputs (arrow keys to control the snake) and outputs the state of the game to stdout
     Gamestate {
         /// in ms
         #[arg(long, default_value_t = 120)]
@@ -37,7 +38,9 @@ enum Commands {
         #[arg(long, default_value_t = false)]
         fit_terminal: bool,
     },
+    /// Reads gamestate from stdin and renders the game on your terminal
     Render,
+    /// Reads stdin line by line and outputs each line on stdout each `frame_duration` ms (usefull for replaying a file)
     Throttle {
         /// in ms
         #[arg(long, default_value_t = 120)]
@@ -45,6 +48,7 @@ enum Commands {
         #[arg(long)]
         loop_infinite: bool,
     },
+    /// Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
     RenderBrowser {
         #[arg(long, default_value_t = 8080)]
         port: u16,
