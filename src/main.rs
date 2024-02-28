@@ -60,13 +60,16 @@ enum Commands {
         address: String,
     },
     /// Produces pipelines of composed commands that you can directly pipe into sh
+    #[command(arg_required_else_help = true)]
     Pipeline(PipelineArgs),
 }
 
 #[derive(Parser)]
 pub struct PipelineArgs {
     #[command(subcommand)]
-    sub: Pipeline,
+    sub: Option<Pipeline>,
+    #[arg(long)]
+    list: bool,
 }
 
 struct CliOptions<'a> {
@@ -151,6 +154,6 @@ fn main() {
         } => throttle_run(*frame_duration, *loop_infinite),
         Commands::RenderBrowser { port } => render_browser_run(*port),
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
-        Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub),
+        Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, "".to_string()),
     }
 }
