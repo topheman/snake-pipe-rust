@@ -3,6 +3,8 @@ pub mod common;
 pub mod gamestate;
 pub mod input;
 #[doc(hidden)]
+pub mod pipeline;
+#[doc(hidden)]
 pub mod render;
 #[doc(hidden)]
 pub mod render_browser;
