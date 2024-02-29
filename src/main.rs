@@ -59,7 +59,7 @@ enum Commands {
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
     },
-    /// Prints out the most known pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
+    /// Prints out some common pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
     #[command(arg_required_else_help = true)]
     Pipeline(PipelineArgs),
 }
