@@ -13,6 +13,7 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 - `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
 - `snakepipe render-browser` spawns a server and sends `stdin` via server-sent-events to a JavaScript renderer in your browser
 - `snakepipe stream-sse` connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+- `snakepipe pipeline <command>` prints out the most common pipelines (combinations of commands), so that you could directly `pbcopy`/paste them
 
 That way:
 
@@ -189,6 +190,24 @@ Usage: snakepipe stream-sse [OPTIONS]
 
 Options:
       --address \<ADDRESS>  [default: http://localhost:8080]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe pipeline --help</code></summary>
+  <pre>
+Prints out some common pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
+
+Usage: snakepipe pipeline [OPTIONS] [COMMAND]
+
+Commands:
+  play        Play in the terminal
+  record      Record a party in the terminal
+  replay      Replay a party you recorded in the terminal
+  sock-play   Play and share a party via a socket in realtime
+  sock-watch  Render the party you are sharing through a socket in realtime
+  http-play   Play and share a party through an http server
+  http-watch  Render the party you shared through the http server, in the terminal
   </pre>
 </details>
 
