@@ -59,7 +59,7 @@ enum Commands {
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
     },
-    /// Produces pipelines of composed commands that you can directly pipe into sh
+    /// Prints out the most known pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
     #[command(arg_required_else_help = true)]
     Pipeline(PipelineArgs),
 }
@@ -154,6 +154,6 @@ fn main() {
         } => throttle_run(*frame_duration, *loop_infinite),
         Commands::RenderBrowser { port } => render_browser_run(*port),
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
-        Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, "".to_string()),
+        Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
     }
 }
