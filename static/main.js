@@ -62,6 +62,9 @@ async function bootstrap(cb) {
   events.onmessage = (event) => {
     if (event.data === 'connected') {
       fetchInitOptions().then(initOptions => {
+        if (initOptions.metadatas['render-browser-host']) {
+          document.querySelector('qrcode-display').setAttribute('data', initOptions.metadatas['render-browser-host'])
+        }
         cb('connected', initOptions);
       })
     }
