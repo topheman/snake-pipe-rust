@@ -19,6 +19,15 @@ That way:
 - you could write your own version of the `gamestate` or `render` command in any programming language and make it work with mine, like this one in nodejs: [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node)
 - it's a great exercise to handle stream serialization/deserialization in rust
 
+## Motivation
+
+I've already done [a few rust projects](http://labs.topheman.com) (with WebAssembly or bevy), however, I wanted something that needs to deal directly with:
+
+- I/O
+- parsing
+- parallelism
+- async programming
+
 ## Prerequisites
 
 - Rust 1.75.0 - [How to install Rust (if you don't have it yet)](https://www.rust-lang.org/tools/install)
