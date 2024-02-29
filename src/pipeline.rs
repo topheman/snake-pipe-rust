@@ -11,7 +11,7 @@ pub enum Pipeline {
     Replay,
     /// Play and share a party via a socket in realtime
     SockPlay,
-    /// Render the party you are sharing shrough a socket in realtime
+    /// Render the party you are sharing through a socket in realtime
     SockWatch,
     /// Play and share a party through an http server
     HttpPlay,
@@ -28,7 +28,6 @@ fn print_formatted_pipeline(pipeline: &str, prefix: &str) {
 }
 
 pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
-    // let prefix = format_prefix(prefix);
     match pipeline {
         Some(Pipeline::Play) => {
             print_formatted_pipeline("snakepipe gamestate|snakepipe render", prefix);
@@ -58,8 +57,6 @@ pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
         }
         None => {
             if list {
-                // todo format with anstyle https://github.com/clap-rs/clap/blob/d0028d74b507c6ce0a05cafd1f4c34bf7ec85c63/clap_builder/src/builder/styling.rs#L57
-                // todo remove reference to |sh - can't do that, it happens in a subshell, use pbcopy ?
                 println!("{}", "List of pipelines:".bold().underline());
                 generate_command(Some(Pipeline::Play), false, "play");
                 generate_command(Some(Pipeline::Record), false, "record");
@@ -72,7 +69,6 @@ pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
                     "\nTo copy a pipeline, run: {}",
                     "snakepipe pipeline <COMMAND>|pbcopy".bold()
                 );
-                // println!("{}", "snakepipe pipeline <COMMAND>|pbcopy".bold());
             }
         }
     }
