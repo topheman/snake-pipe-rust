@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Set of tools for better development of JavaScript part.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "dev-server-sse": "node ./dist/dev-server-sse.js"
   },
   "author": "Christophe Rosset",
   "devDependencies": {
