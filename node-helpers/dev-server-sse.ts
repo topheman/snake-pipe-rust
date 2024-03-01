@@ -1,4 +1,5 @@
 import path from 'node:path';
+import fs from 'node:fs/promises';
 
 import { parseGameStateFromAsyncIterator, version } from 'snakepipe';
 
@@ -21,5 +22,38 @@ if (path.isAbsolute(filePathOfGameRecording)) {
   resolvedFilePathOfGameRecording = path.resolve(process.cwd(), filePathOfGameRecording);
 }
 
-console.log(version());
-console.log(resolvedFilePathOfGameRecording);
+main(resolvedFilePathOfGameRecording);
+
+function timeout(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, delay = 120) {
+  let currentIndex = 0;
+  yield input[currentIndex];
+  while (true) {
+    currentIndex++;
+    if (input[currentIndex]?.trim()) {
+      await timeout(120);
+      yield input[currentIndex]
+    }
+    else {
+      // loop back
+      currentIndex = 1;
+    }
+  }
+}
+
+async function main(resolvedFilePathOfGameRecording: string) {
+  const fileContent =
+    (await fs.readFile(resolvedFilePathOfGameRecording))
+      .toString()
+      .split('\n')
+      .filter(Boolean);
+  const asyncGenerator = infiniteAsyncGeneratorFromArrayString(fileContent)
+  const { options, lines } = await parseGameStateFromAsyncIterator(asyncGenerator);
+  console.log(JSON.stringify(options));
+  for await (const line of lines()) {
+    console.log(JSON.stringify(line));
+  }
+}
