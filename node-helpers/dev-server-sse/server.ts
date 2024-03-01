@@ -15,17 +15,23 @@ export function makeServer(input: Input, staticFolder: string) {
     root: staticFolder
   })
 
+  const loop: Record<string, boolean> = {};
+
   server.register(FastifySSEPlugin);
-  server.get("/events", function (req, res) {
-    console.log(req);
-    res.sse(
-      (async function* () {
-        yield { data: "connected" };
-        for await (const line of input.lines()) {
-          yield { data: JSON.stringify(line) };
-        }
-      })()
-    );
+  server.get("/events", async function (req, res) {
+    loop[req.id] = true;
+    req.raw.on('close', () => {
+      loop[req.id] = false;
+      res.sseContext.source.end();
+    })
+    res.sse({ data: "connected" });
+    const iterator = input.lines();
+    while (loop[req.id]) {
+      const nextLine = await iterator.next();
+      if (!nextLine.done && nextLine.value) {
+        res.sse({ data: JSON.stringify(nextLine.value) });
+      }
+    }
   });
 
   server.get('/init-options', async function handler(request, reply) {
