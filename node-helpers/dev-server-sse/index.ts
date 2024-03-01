@@ -1,7 +1,9 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-import { parseGameStateFromAsyncIterator, version } from 'snakepipe';
+import { parseGameStateFromAsyncIterator } from 'snakepipe';
+
+import { makeServer } from './server'
 
 if (process.argv.length < 3) {
   console.log("You must pass the path of the file containing the recording of a game.");
@@ -34,6 +36,7 @@ async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, dela
   while (true) {
     currentIndex++;
     if (input[currentIndex]?.trim()) {
+      console.log(currentIndex, (JSON.parse(input[currentIndex]) as any).snake.head);
       await timeout(120);
       yield input[currentIndex]
     }
@@ -45,6 +48,8 @@ async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, dela
 }
 
 async function main(resolvedFilePathOfGameRecording: string) {
+  const staticFolder = path.resolve(__dirname, '../..', 'static');
+  console.log(staticFolder)
   const fileContent =
     (await fs.readFile(resolvedFilePathOfGameRecording))
       .toString()
@@ -53,7 +58,5 @@ async function main(resolvedFilePathOfGameRecording: string) {
   const asyncGenerator = infiniteAsyncGeneratorFromArrayString(fileContent)
   const { options, lines } = await parseGameStateFromAsyncIterator(asyncGenerator);
   console.log(JSON.stringify(options));
-  for await (const line of lines()) {
-    console.log(JSON.stringify(line));
-  }
+  makeServer({ options, lines }, staticFolder).listen({ port: 8080 });
 }
