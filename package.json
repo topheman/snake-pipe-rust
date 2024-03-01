@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christophe Rosset",
-  "workspaces": ["node-helpers"]
+  "workspaces": [
+    "node-helpers"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
 }
