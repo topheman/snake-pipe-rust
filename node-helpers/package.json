@@ -1,0 +1,12 @@
+{
+  "name": "node-helpers",
+  "version": "0.1.0",
+  "description": "Set of tools for better development of JavaScript part.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christophe Rosset",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
