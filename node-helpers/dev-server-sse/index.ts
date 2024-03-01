@@ -47,7 +47,7 @@ async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, dela
   }
 }
 
-async function main(resolvedFilePathOfGameRecording: string) {
+async function main(resolvedFilePathOfGameRecording: string, port = 8080) {
   const staticFolder = path.resolve(__dirname, '../..', 'static');
   console.log(staticFolder)
   const fileContent =
@@ -58,5 +58,5 @@ async function main(resolvedFilePathOfGameRecording: string) {
   const asyncGenerator = infiniteAsyncGeneratorFromArrayString(fileContent)
   const { options, lines } = await parseGameStateFromAsyncIterator(asyncGenerator);
   console.log(JSON.stringify(options));
-  makeServer({ options, lines }, staticFolder).listen({ port: 8080 });
+  makeServer({ options, lines }, staticFolder).listen({ port });
 }
