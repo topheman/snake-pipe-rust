@@ -1,0 +1,11 @@
+{
+  "name": "snake-pipe-rust",
+  "version": "0.1.0",
+  "private": true,
+  "description": "You only need this part for better experience with js development, not mandadtory.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christophe Rosset",
+  "workspaces": ["node-helpers"]
+}
