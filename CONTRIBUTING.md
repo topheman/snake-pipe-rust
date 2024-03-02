@@ -12,6 +12,12 @@ To build the project:
 cargo build
 ```
 
+To run:
+
+```sh
+./target/debug/snakepipe # will show the help - you can use it is explained in the README
+```
+
 ## JavaScript
 
 The [`snakepipe render-browser`](./README.md#-you-can-mirror-your-playing-terminal-into-another-one-through-http) command launches a rust http server that serves some JavaScript code that connects to server-sent-events and renders the game inside the browser.
