@@ -4,7 +4,10 @@
   "private": true,
   "description": "You only need this part for better experience with js development, not mandadtory.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run --workspace=node-helpers build",
+    "setup": "npm run --workspace=node-helpers setup",
+    "dev-server-sse": "npm run --workspace=node-helpers dev-server-sse",
+    "dev-server-sse:file": "npm run --workspace=node-helpers dev-server-sse:file"
   },
   "author": "Christophe Rosset",
   "workspaces": [

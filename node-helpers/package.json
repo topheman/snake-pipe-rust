@@ -4,7 +4,10 @@
   "description": "Set of tools for better development of JavaScript part.",
   "scripts": {
     "build": "tsc",
-    "dev-server-sse": "node ./dist/index.js"
+    "dl-recorded-party": "curl -L https://github.com/topheman/snake-pipe-rust/releases/download/v1.1.0/snakepipe-output -o /tmp/snakepipe-output",
+    "dev-server-sse": "npm run dev-server-sse:file /tmp/snakepipe-output",
+    "dev-server-sse:file": "node ./dist/index.js",
+    "setup": "npm run dl-recorded-party"
   },
   "author": "Christophe Rosset",
   "devDependencies": {
