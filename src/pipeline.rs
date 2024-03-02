@@ -9,10 +9,10 @@ pub enum Pipeline {
     Record,
     /// Replay a party you recorded in the terminal
     Replay,
-    /// Play and share a party via a socket in realtime
-    SockPlay,
-    /// Render the party you are sharing through a socket in realtime
-    SockWatch,
+    /// Play and share a party via a shared file in realtime
+    FilePlay,
+    /// Render the party you are sharing through a file in realtime
+    FileWatch,
     /// Play and share a party through an http server
     HttpPlay,
     /// Render the party you shared through the http server, in the terminal
@@ -40,12 +40,12 @@ pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
             "cat /tmp/snakepipe-output|snakepipe throttle|snakepipe render",
             prefix,
         ),
-        Some(Pipeline::SockPlay) => print_formatted_pipeline(
-            "snakepipe gamestate|tee /tmp/snakepipe.sock|snakepipe render",
+        Some(Pipeline::FilePlay) => print_formatted_pipeline(
+            "snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render",
             prefix,
         ),
-        Some(Pipeline::SockWatch) => print_formatted_pipeline(
-            "cat /dev/null > /tmp/snakepipe.sock && tail -f /tmp/snakepipe.sock|snakepipe render",
+        Some(Pipeline::FileWatch) => print_formatted_pipeline(
+            "cat /dev/null > /tmp/snakepipe-output && tail -f /tmp/snakepipe-output|snakepipe render",
             prefix,
         ),
         Some(Pipeline::HttpPlay) => print_formatted_pipeline(
@@ -61,8 +61,8 @@ pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
                 generate_command(Some(Pipeline::Play), false, "play");
                 generate_command(Some(Pipeline::Record), false, "record");
                 generate_command(Some(Pipeline::Replay), false, "replay");
-                generate_command(Some(Pipeline::SockPlay), false, "sock-play");
-                generate_command(Some(Pipeline::SockWatch), false, "sock-watch");
+                generate_command(Some(Pipeline::FilePlay), false, "file-play");
+                generate_command(Some(Pipeline::FileWatch), false, "file-watch");
                 generate_command(Some(Pipeline::HttpPlay), false, "http-play");
                 generate_command(Some(Pipeline::HttpWatch), false, "http-watch");
                 println!(
