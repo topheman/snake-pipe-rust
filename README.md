@@ -13,8 +13,8 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 - `snakepipe gamestate` accepts user inputs, calculates the state of the game and writes it to `stdout`
 - `snakepipe render` reads the state of the game from `stdin` and renders it on the terminal
 - `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
-- `snakepipe render-browser` spawns a server and sends `stdin` via server-sent-events to a JavaScript renderer in your browser
-- `snakepipe stream-sse` connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+- `snakepipe render-browser` spawns a server and sends `stdin` via server-sent events to a JavaScript renderer in your browser
+- `snakepipe stream-sse` connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
 - `snakepipe pipeline <command>` prints out the most common pipelines (combinations of commands), so that you could directly `pbcopy`/paste them
 
 That way:
@@ -24,7 +24,7 @@ That way:
 
 ## Motivation
 
-I've already done [a few rust projects](http://labs.topheman.com) (with WebAssembly or bevy), however, I wanted something that needs to deal directly with:
+I've already done [a few rust projects](http://labs.topheman.com) (with WebAssembly or [bevy](https://github.com/topheman/bevy-rust-wasm-experiments)), however, I wanted something that needs to deal directly with:
 
 - I/O
 - parsing
@@ -86,7 +86,7 @@ snakepipe gamestate|tee /tmp/snakepipe.sock|snakepipe render
 snakepipe gamestate|snakepipe render-browser|snakepipe render
 ```
 
-Then open [http://localhost:8080](http://localhost:8080). You'll be able to switch between renderers in your browser as you are playing in your terminal (thanks to server-sent-events).
+Then open [http://localhost:8080](http://localhost:8080). You'll be able to switch between renderers in your browser as you are playing in your terminal (thanks to server-sent events).
 
 ### 🖼 You can mirror your playing terminal into another one, through http
 
@@ -95,14 +95,14 @@ Open two terminals:
 ```sh
 # main terminal:
 # - accepts user inputs
-# - spawns an http server that streams stdin to server-sent-events
+# - spawns an http server that streams stdin to server-sent events
 # - renders the game to the terminal so you can play
 snakepipe gamestate|snakepipe render-browser|snakepipe render
 ```
 
 ```sh
 # mirroring terminal (not necessary the same device, only need to be on the same network):
-# - connects to the http server and streams server-sent-events to sdout
+# - connects to the http server and streams server-sent events to sdout
 # - render the gamestate retrieved from the server
 snakepipe stream-sse|snakepipe render
 ```
@@ -124,8 +124,8 @@ Commands:
   gamestate       Accepts user inputs (arrow keys to control the snake) and outputs the state of the game to stdout
   render          Reads gamestate from stdin and renders the game on your terminal
   throttle        Reads stdin line by line and outputs each line on stdout each `frame_duration` ms (usefull for replaying a file)
-  render-browser  Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
-  stream-sse      Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+  render-browser  Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent events to a JavaScript renderer
+  stream-sse      Connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
   help            Print this message or the help of the given subcommand(s)
 
 Options:
@@ -174,7 +174,7 @@ Options:
 <details>
   <summary><code>snakepipe render-browser --help</code></summary>
   <pre>
-Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
+Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent events to a JavaScript renderer
 
 Usage: snakepipe render-browser [OPTIONS]
 
@@ -186,7 +186,7 @@ Options:
 <details>
   <summary><code>snakepipe stream-sse --help</code></summary>
   <pre>
-Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+Connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
 
 Usage: snakepipe stream-sse [OPTIONS]
 

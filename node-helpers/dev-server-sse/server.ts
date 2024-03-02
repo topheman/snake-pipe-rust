@@ -50,7 +50,7 @@ export function makeServer(input: Input, staticFolder: string) {
       res.sse({ data: JSON.stringify(line) });
     }
     req.raw.on('close', () => {
-      gameEvents.off("line", listener); // if used in production with eavy traffic, consider augment `emitter.setMaxListeners()` (currently up to 11 clients in parallel)
+      gameEvents.off("line", listener); // if used in production with eavy traffic, consider increasing `emitter.setMaxListeners()` (currently up to 11 clients in parallel)
       res.sseContext.source.end();
     })
     res.sse({ data: "connected" });

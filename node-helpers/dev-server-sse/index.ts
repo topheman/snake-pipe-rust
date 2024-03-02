@@ -1,21 +1,32 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import url from 'url';
+import { setTimeout } from 'node:timers/promises';
+import url from 'node:url';
+
 import localIpUrl from 'local-ip-url';
 import { parseGameStateFromAsyncIterator, InitOptions } from 'snakepipe';
 
 import { makeServer } from './server.js'
 
-
+/**
+ * `__dirname` doesn't exist in esm, you need to create it.
+ *
+ * We could improve the code bellow with just `import.meta.dirname` - it needs at least node 20.11.
+ * For the moment keeping retrocompatibility with all node 20 versions.
+ *
+ * Source: https://nodejs.org/docs/v20.11.0/api/esm.html#importmetadirname
+ */
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url)); // __dirname for esm
+
+const ExitCodeUsageError = 64; // The command was used incorrectly, e.g., with the wrong number of arguments, a bad flag, a bad syntax in a parameter, etc.
 
 if (process.argv.length < 3) {
   console.log("You must pass the path of the file containing the recording of a game.");
-  process.exit(64);
+  process.exit(ExitCodeUsageError);
 }
 if (process.argv.length > 3) {
-  console.log("Too much arguments passed");
-  process.exit(64);
+  console.log("Too many arguments passed");
+  process.exit(ExitCodeUsageError);
 }
 
 const [filePathOfGameRecording] = process.argv.slice(2, 3);
@@ -30,17 +41,13 @@ if (path.isAbsolute(filePathOfGameRecording)) {
 
 main(resolvedFilePathOfGameRecording);
 
-function timeout(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, delay = 120) {
   let currentIndex = 0;
   yield input[currentIndex];
   while (true) {
     currentIndex++;
     if (input[currentIndex]?.trim()) {
-      await timeout(120);
+      await setTimeout(delay);
       yield input[currentIndex]
     }
     else {

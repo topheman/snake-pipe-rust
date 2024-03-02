@@ -2,7 +2,7 @@
   "name": "snake-pipe-rust",
   "version": "0.1.0",
   "private": true,
-  "description": "You only need this part for better experience with js development, not mandadtory.",
+  "description": "You only need this part for a better experience with js development, not mandadtory.",
   "scripts": {
     "build": "npm run --workspace=node-helpers build",
     "setup": "npm run --workspace=node-helpers setup",
