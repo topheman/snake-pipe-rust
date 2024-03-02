@@ -1,5 +1,7 @@
 # snake-pipe-rust
 
+*This is the v1 branch see [releases](https://github.com/topheman/snake-pipe-rust/releases) for previous versions.*
+
 [![crates.io](https://img.shields.io/crates/v/snakepipe.svg)](https://crates.io/crates/snakepipe) [![Docs](https://docs.rs/snakepipe/badge.svg)](https://docs.rs/snakepipe/latest/snakepipe/) [![Build](https://github.com/topheman/snake-pipe-rust/actions/workflows/rust.yml/badge.svg?label=build)](https://github.com/topheman/snake-pipe-rust/actions/workflows/rust.yml)
 
 Not just yet another snake game in the terminal 😉.
