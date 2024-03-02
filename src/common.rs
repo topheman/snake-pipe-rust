@@ -140,7 +140,7 @@ mod tests {
     }
 
     #[test]
-    fn should_have_as_many_versions_as_it_exist() {
+    fn should_extract_all_existing_versions() {
         let mut version = HashMap::new();
         version.insert("gamestate".to_string(), "snakepipe@1.0.0(rust)".to_string());
         version.insert("throttle".to_string(), "snakepipe@1.0.0(node)".to_string());
@@ -176,7 +176,7 @@ mod tests {
     }
 
     #[test]
-    fn should_show_features_if_they_have_different_version() {
+    fn should_show_features_if_version_differs() {
         let mut versions_with_features = IndexMap::new();
         versions_with_features.insert(
             "snakepipe@1.0.0(rust)".to_string(),

@@ -55,7 +55,7 @@ snakepipe gamestate|snakepipe render
 ---
 
 ```sh
-# Record a party by saving the output of gamestate command to a file with the built-in tee utility
+# Record a party by saving the output of the gamestate command to a file with the built-in tee utility
 
 snakepipe gamestate|tee /tmp/snake-output|snakepipe render
 ```

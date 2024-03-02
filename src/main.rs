@@ -50,12 +50,12 @@ enum Commands {
         #[arg(long)]
         loop_infinite: bool,
     },
-    /// Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent-events to a JavaScript renderer
+    /// Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent events to a JavaScript renderer
     RenderBrowser {
         #[arg(long, default_value_t = 8080)]
         port: u16,
     },
-    /// Connects to the server spawned by `render-browser` and streams server-sent-events back to the terminal
+    /// Connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
     StreamSse {
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
@@ -92,7 +92,7 @@ impl Into<InitOptions> for CliOptions<'_> {
         } else if self.width.is_some() {
             size = SizeOption {
                 width: self.width.unwrap_or(DEFAULT_WIDTH),
-                height: self.width.unwrap_or(DEFAULT_HEIGHT),
+                height: self.height.unwrap_or(DEFAULT_HEIGHT),
             }
         } else if self.fit_terminal.eq(&true) {
             let (width, height) = crossterm::terminal::size()
