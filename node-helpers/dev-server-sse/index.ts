@@ -36,7 +36,6 @@ async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, dela
   while (true) {
     currentIndex++;
     if (input[currentIndex]?.trim()) {
-      console.log(currentIndex, (JSON.parse(input[currentIndex]) as any).snake.head);
       await timeout(120);
       yield input[currentIndex]
     }
@@ -49,7 +48,6 @@ async function* infiniteAsyncGeneratorFromArrayString(input: Array<string>, dela
 
 async function main(resolvedFilePathOfGameRecording: string, port = 8080) {
   const staticFolder = path.resolve(__dirname, '../..', 'static');
-  console.log(staticFolder)
   const fileContent =
     (await fs.readFile(resolvedFilePathOfGameRecording))
       .toString()
@@ -57,6 +55,7 @@ async function main(resolvedFilePathOfGameRecording: string, port = 8080) {
       .filter(Boolean);
   const asyncGenerator = infiniteAsyncGeneratorFromArrayString(fileContent)
   const { options, lines } = await parseGameStateFromAsyncIterator(asyncGenerator);
-  console.log(JSON.stringify(options));
-  makeServer({ options, lines }, staticFolder).listen({ port });
+  makeServer({ options, lines }, staticFolder).listen({ port }).then(() => {
+    console.log(`Listening on http://localhost=${port}`)
+  });
 }

@@ -18,6 +18,13 @@ export function makeServer(input: Input, staticFolder: string) {
   const loop: Record<string, boolean> = {};
 
   server.register(FastifySSEPlugin);
+  /**
+   * For the moment, only supports one client at a time
+   * If more than one connects at the same time, the iterator will
+   * move by more than once at a time (and you will drop frames)
+   *
+   * It's enough for the moment for a dev-server
+   */
   server.get("/events", async function (req, res) {
     loop[req.id] = true;
     req.raw.on('close', () => {
