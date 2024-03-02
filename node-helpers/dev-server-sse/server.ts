@@ -16,7 +16,6 @@ function makeEventEmitterFromAsyncGenerator(lines: () => AsyncGenerator<Game>) {
     clientsConnected.add(reqId);
   });
 
-
   myEmitter.on("disconnect", (reqId) => {
     clientsConnected.delete(reqId);
   });
@@ -44,8 +43,6 @@ export function makeServer(input: Input, staticFolder: string) {
   server.register(fastifyStatic, {
     root: staticFolder
   })
-
-  const loop: Record<string, boolean> = {};
 
   server.register(FastifySSEPlugin);
   server.get("/events", function (req, res) {
