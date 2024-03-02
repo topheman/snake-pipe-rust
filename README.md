@@ -1,5 +1,7 @@
 # snake-pipe-rust
 
+*This is the next version of the package - [see releases](https://github.com/topheman/snake-pipe-rust/releases) for previous versions.*
+
 [![crates.io](https://img.shields.io/crates/v/snakepipe.svg)](https://crates.io/crates/snakepipe) [![Docs](https://docs.rs/snakepipe/badge.svg)](https://docs.rs/snakepipe/latest/snakepipe/) [![Build](https://github.com/topheman/snake-pipe-rust/actions/workflows/rust.yml/badge.svg?label=build)](https://github.com/topheman/snake-pipe-rust/actions/workflows/rust.yml)
 
 Not just yet another snake game in the terminal 😉.
@@ -17,7 +19,7 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 
 That way:
 
-- you could write your own version of the `gamestate` or `render` command in any programming language and make it work with mine, like this one in nodejs: [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node)
+- you could write your own version of the `gamestate` or `render` command in any programming language and make it work with mine
 - it's a great exercise to handle stream serialization/deserialization in rust
 
 ## Motivation
