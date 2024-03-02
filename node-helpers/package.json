@@ -2,6 +2,7 @@
   "name": "node-helpers",
   "version": "0.1.0",
   "description": "Set of tools for better development of JavaScript part.",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "dl-recorded-party": "curl -L https://github.com/topheman/snake-pipe-rust/releases/download/v1.1.0/snakepipe-output -o /tmp/snakepipe-output",
@@ -11,6 +12,7 @@
   },
   "author": "Christophe Rosset",
   "devDependencies": {
+    "local-ip-url": "^1.0.10",
     "typescript": "^5.3.3"
   },
   "dependencies": {
