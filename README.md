@@ -72,12 +72,12 @@ Open two terminals that will communicate via a file that will be `tail`ed and pi
 
 ```sh
 # mirroring terminal
-cat /dev/null > /tmp/snakepipe.sock && tail -f /tmp/snakepipe.sock|snakepipe render
+cat /dev/null > /tmp/snakepipe-output && tail -f /tmp/snakepipe-output|snakepipe render
 ```
 
 ```sh
 # main terminal
-snakepipe gamestate|tee /tmp/snakepipe.sock|snakepipe render
+snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
 ```
 
 ### 🖥 You can mirror your playing terminal into a server you can open in a browser
@@ -206,8 +206,8 @@ Commands:
   play        Play in the terminal
   record      Record a party in the terminal
   replay      Replay a party you recorded in the terminal
-  sock-play   Play and share a party via a socket in realtime
-  sock-watch  Render the party you are sharing through a socket in realtime
+  file-play   Play and share a party via a shared file in realtime
+  file-watch  Render the party you are sharing through a file in realtime
   http-play   Play and share a party through an http server
   http-watch  Render the party you shared through the http server, in the terminal
   </pre>
