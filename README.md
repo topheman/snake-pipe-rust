@@ -245,8 +245,13 @@ fn do_something(parsed_line: Game) {
 }
 ```
 
-## Next
+## Contributing
 
-- [ ] Make an implementation of the `render` command that starts a server so that the render happens in a browser
-- [ ] Make an implementation of the actual `render` for the terminal in an other language than rust
-- Experimental/Partial nodejs implementation of this crate available at [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node)
+You can:
+
+- Make an implementation of the actual `snakepipe render` command for the terminal in an other language than rust
+- Make your own JavaScript renderer for the `snakepipe render-browser` command and ask for a PR to integrate it to the project
+
+An Experimental/Partial nodejs implementation of this crate available at [topheman/snake-pipe-node](https://github.com/topheman/snake-pipe-node).
+
+More infos in [CONTRIBUTING.md](./CONTRIBUTING.md).
