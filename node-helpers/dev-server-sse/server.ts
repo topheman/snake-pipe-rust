@@ -1,12 +1,42 @@
+import EventEmitter from 'node:events';
 import Fastify from 'fastify'
 import { FastifySSEPlugin } from "fastify-sse-v2";
 import fastifyStatic from '@fastify/static';
 
-import { parseGameStateFromAsyncIterator } from 'snakepipe';
+import { parseGameStateFromAsyncIterator, Game } from 'snakepipe';
 
 type Input = Awaited<ReturnType<typeof parseGameStateFromAsyncIterator>>
 
+function makeEventEmitterFromAsyncGenerator(lines: () => AsyncGenerator<Game>) {
+  const myEmitter = new EventEmitter();
+
+  const clientsConnected = new Set();
+
+  myEmitter.on("connect", (reqId) => {
+    clientsConnected.add(reqId);
+  });
+
+
+  myEmitter.on("disconnect", (reqId) => {
+    clientsConnected.delete(reqId);
+  });
+
+  const iterator = lines();
+  (async function () {
+    while (true) {
+      const nextLine = await iterator.next();
+      if (!nextLine.done && nextLine.value) {
+        myEmitter.emit("line", nextLine.value)
+      }
+    }
+  })()
+
+  return myEmitter;
+}
+
 export function makeServer(input: Input, staticFolder: string) {
+  const gameEvents = makeEventEmitterFromAsyncGenerator(input.lines);
+
   const server = Fastify({
     logger: false
   });
@@ -18,27 +48,16 @@ export function makeServer(input: Input, staticFolder: string) {
   const loop: Record<string, boolean> = {};
 
   server.register(FastifySSEPlugin);
-  /**
-   * For the moment, only supports one client at a time
-   * If more than one connects at the same time, the iterator will
-   * move by more than once at a time (and you will drop frames)
-   *
-   * It's enough for the moment for a dev-server
-   */
-  server.get("/events", async function (req, res) {
-    loop[req.id] = true;
+  server.get("/events", function (req, res) {
+    function listener(line: Game) {
+      res.sse({ data: JSON.stringify(line) });
+    }
     req.raw.on('close', () => {
-      loop[req.id] = false;
+      gameEvents.off("line", listener); // if used in production with eavy traffic, consider augment `emitter.setMaxListeners()` (currently up to 11 clients in parallel)
       res.sseContext.source.end();
     })
     res.sse({ data: "connected" });
-    const iterator = input.lines();
-    while (loop[req.id]) {
-      const nextLine = await iterator.next();
-      if (!nextLine.done && nextLine.value) {
-        res.sse({ data: JSON.stringify(nextLine.value) });
-      }
-    }
+    gameEvents.on("line", listener);
   });
 
   server.get('/init-options', async function handler(request, reply) {
