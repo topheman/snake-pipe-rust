@@ -24,7 +24,12 @@ serde_json = "1.0"
 array2d = "0.3.0"
 ctrlc = "3.4.2"
 indexmap = "2.2.3"
-actix-web = "4.5.1"
+# Must opt out of compress-zstd, because it will fail cross compilation
+# list of actix-web features: https://docs.rs/actix-web/latest/actix_web/#crate-features
+actix-web = { version = "4.5.1", default-features = false, features = [
+  "macros",
+  "compress-gzip",
+] }
 actix-web-static-files = "4.0.1"
 static-files = "0.2.3"
 futures-util = "0.3.30"
