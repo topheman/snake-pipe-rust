@@ -6,6 +6,7 @@ use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::{InitOptions, SizeOption};
 use snakepipe::pipeline::{generate_command as pipeline_generate_command, Pipeline};
 use snakepipe::render::run as render_run;
+use snakepipe::render_browser::common::port_is_available;
 use snakepipe::render_browser::run as render_browser_run;
 use snakepipe::stream_sse::run as stream_sse_run;
 use snakepipe::throttle::run as throttle_run;
@@ -152,7 +153,13 @@ fn main() {
             frame_duration,
             loop_infinite,
         } => throttle_run(*frame_duration, *loop_infinite),
-        Commands::RenderBrowser { port } => render_browser_run(*port),
+        Commands::RenderBrowser { port } => {
+            if port_is_available(*port) {
+                return render_browser_run(*port);
+            }
+            eprintln!("Error: port {} already in use", port);
+            std::process::exit(exitcode::UNAVAILABLE);
+        }
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
     }

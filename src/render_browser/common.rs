@@ -1,3 +1,5 @@
+use std::net::TcpListener;
+
 #[derive(Debug, Clone)]
 pub struct UrlToDisplay {
     pub url: String,
@@ -14,5 +16,12 @@ impl UrlToDisplay {
                 url: format!("http://localhost:{}", port),
             };
         }
+    }
+}
+
+pub fn port_is_available(port: u16) -> bool {
+    match TcpListener::bind(("0.0.0.0", port)) {
+        Ok(_) => true,
+        Err(_) => false,
     }
 }
