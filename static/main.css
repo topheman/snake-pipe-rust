@@ -31,6 +31,27 @@ body {
   list-style: none;
   padding-left: 0;
 }
+.layout-qrcode {
+  max-width: 160px;
+  font-size: 14px;
+}
+@media (min-width: 1024px) {
+  .layout-qrcode {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px;
+  }
+  .layout-top {
+    margin-right: 180px;
+  }
+}
+@media (max-width: 1024px) {
+  .layout-qrcode {
+    display: block;
+    margin: 20px auto;
+  }
+}
 /** style for basic renderer */
 #basic {
   display: flex;
