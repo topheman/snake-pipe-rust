@@ -2,6 +2,7 @@ pub mod game;
 pub mod physics;
 pub mod snake;
 
+use calm_io::stdoutln;
 use std::time::{Duration, Instant};
 
 use crossterm::event::{poll, read};
@@ -15,7 +16,15 @@ use crate::input::InitOptions;
  * It runs forever and returns if ctrl+c is hit.
  */
 pub fn run(options: InitOptions) -> std::io::Result<()> {
-    println!("{}\r", serde_json::to_string(&options).unwrap());
+    match stdoutln!("{}\r", serde_json::to_string(&options).unwrap()) {
+        Ok(_) => Ok(()),
+        Err(e) => match e.kind() {
+            std::io::ErrorKind::BrokenPipe => {
+                std::process::exit(1);
+            }
+            _ => Err(e),
+        },
+    }?;
     let mut main = game::Game::new(
         options.size.width,
         options.size.height,
@@ -40,7 +49,15 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
                 || main.state == GameState::Over
                 || main.state == GameState::Paused && prev_state == GameState::Running
             {
-                println!("{}\r", serde_json::to_string(&main).unwrap());
+                match stdoutln!("{}\r", serde_json::to_string(&main).unwrap()) {
+                    Ok(_) => Ok(()),
+                    Err(e) => match e.kind() {
+                        std::io::ErrorKind::BrokenPipe => {
+                            std::process::exit(1);
+                        }
+                        _ => Err(e),
+                    },
+                }?;
             }
             prev_state = main.state.clone();
         }
