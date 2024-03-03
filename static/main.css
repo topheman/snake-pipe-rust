@@ -31,3 +31,37 @@ body {
   list-style: none;
   padding-left: 0;
 }
+/** style for basic renderer */
+#basic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#basic #basic-infos {
+  text-align: center;
+}
+#basic #basic-game {
+  font-size: var(--basic-zoom-font-size);
+  line-height: var(--basic-zoom-font-size);
+}
+#basic #zoom-slider-wrapper {
+  -webkit-user-select: none; /* Safari */
+  user-select: none; /* Standard syntax */
+}
+#basic #zoom-slider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  touch-action: manipulation;
+  user-select: none;
+}
+#basic [name=increment], #basic [name=decrement] {
+  width: 48px;
+  height: 48px;
+  touch-action: manipulation; /** prevent double-tap from zooming on mobiles */
+}
+@media (min-width: 1024px) {
+  #basic [name=increment], #basic [name=decrement] {
+    width: 32px;
+    height: 32px;
+  }
+}
