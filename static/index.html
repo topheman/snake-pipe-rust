@@ -11,24 +11,29 @@
   <script src="main.js" type="module"></script>
 </head>
 <body>
-  <h1>render-browser</h1>
-  <p>This mirrors your game in the terminal by launching a server, reading the state from stdin, streaming this state through server-sent-events, then a JS renderer reads it in the browser and renders it.</p>
-  <div class="renderer-switcher-wrapper">
-    <p>Choose your renderer:</p>
-    <form id="renderer-switcher">
-      <ul>
-        <li>
-          <input type="radio" name="rendererName" value="basic" id="renderName-basic" checked/>
-          <label for="renderName-basic">Basic</label>
-        </li>
-        <li>
-          <input type="radio" name="rendererName" value="inspect" id="renderName-inspect"/>
-          <label for="renderName-inspect">Inspect</label>
-        </li>
-      </ul>
-    </form>
+  <div class="layout-top">
+    <h1>render-browser</h1>
+    <p>This mirrors your game in the terminal by launching a server, reading the state from stdin, streaming this state through server-sent events, then a JS renderer reads it in the browser and renders it.</p>
+    <div class="renderer-switcher-wrapper">
+      <p>Choose your renderer:</p>
+      <form id="renderer-switcher">
+        <ul>
+          <li>
+            <input type="radio" name="rendererName" value="basic" id="renderName-basic" checked/>
+            <label for="renderName-basic">Basic</label>
+          </li>
+          <li>
+            <input type="radio" name="rendererName" value="inspect" id="renderName-inspect"/>
+            <label for="renderName-inspect">Inspect</label>
+          </li>
+        </ul>
+      </form>
+    </div>
   </div>
-  <div id="root"></div>
-  <qrcode-display width="160" height="160"></qrcode-display>
+  <div id="root" class="layout-main"></div>
+  <div class="layout-qrcode">
+    <qrcode-display width="160" height="160"></qrcode-display>
+    <p>Snap the qrcode to watch it on your mobile</p>
+  </div>
 </body>
 </html>
