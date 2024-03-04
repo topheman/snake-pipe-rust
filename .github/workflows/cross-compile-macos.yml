@@ -1,0 +1,44 @@
+# inspired by https://github.com/Timmmm/rust_cross_compile_demo/blob/master/.github/workflows/build.yaml
+name: Cross-Compile-MacOS
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  # Allow manually triggering the workflow from the web UI.
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install Linux and Windows Cross Compilers
+      run: sudo apt-get install --yes --no-install-recommends musl-tools gcc-mingw-w64-x86-64-win32
+
+    - name: Set up MacOS Cross Compiler
+      uses: Timmmm/setup-osxcross@v2
+      with:
+        osx-version: "12.3"
+
+    - name: Install Rustup targets
+      run: rustup target add x86_64-unknown-linux-musl x86_64-pc-windows-gnu x86_64-apple-darwin aarch64-apple-darwin
+
+    - name: Check out source code
+      uses: actions/checkout@v3
+
+    - name: Check
+      run: cargo check
+
+    - name: Build
+      run: cargo build --target x86_64-unknown-linux-musl --target x86_64-pc-windows-gnu --target x86_64-apple-darwin --target aarch64-apple-darwin
+
+    - name: Upload Binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: binaries
+        path: target
