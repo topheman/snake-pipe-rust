@@ -55,6 +55,19 @@ async function fetchInitOptions() {
 
 /**
  *
+ * @param {String} renderBrowserHost
+ */
+function getQrcodeUrlToDisplay(renderBrowserHost) {
+  // if user accessed via ip v4 and renderBrowserHost is ip v4 or user accessed via localhost
+  if (location.origin === renderBrowserHost || location.hostname === 'localhost') {
+    return renderBrowserHost;
+  }
+  // if user accessed via a hostname resolved ouside
+  return location.origin;
+}
+
+/**
+ *
  * @param {(eventName: 'connected' | 'event', payload: any) => void} cb
  */
 async function bootstrap(cb) {
@@ -63,7 +76,7 @@ async function bootstrap(cb) {
     if (event.data === 'connected') {
       fetchInitOptions().then(initOptions => {
         if (initOptions.metadatas['render-browser-host']) {
-          document.querySelector('qrcode-display').setAttribute('data', initOptions.metadatas['render-browser-host'])
+          document.querySelector('qrcode-display').setAttribute('data', getQrcodeUrlToDisplay(initOptions.metadatas['render-browser-host']));
         }
         cb('connected', initOptions);
       })
