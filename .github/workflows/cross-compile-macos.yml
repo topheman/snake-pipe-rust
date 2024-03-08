@@ -19,7 +19,7 @@ jobs:
         osx-version: "12.3"
 
     - name: Install Rustup targets
-      run: rustup target add x86_64-apple-darwin aarch64-apple-darwin
+      run: rustup target add x86_64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin
 
     - name: Check out source code
       uses: actions/checkout@v3
@@ -28,10 +28,11 @@ jobs:
       run: cargo check
 
     - name: Build
-      run: cargo build --release --target x86_64-apple-darwin --target aarch64-apple-darwin
+      run: cargo build --release --target x86_64-unknown-linux-gnu --target x86_64-apple-darwin --target aarch64-apple-darwin
 
     - name: Compress
       run: |
+        (cd target/x86_64-unknown-linux-gnu/release && tar -cvf snakepipe-x86_64-unknown-linux-gnu.tar.gz snakepipe && mv snakepipe-x86_64-unknown-linux-gnu.tar.gz ../../..)
         (cd target/x86_64-apple-darwin/release && tar -cvf snakepipe-x86_64-apple-darwin.tar.gz snakepipe && mv snakepipe-x86_64-apple-darwin.tar.gz ../../..)
         (cd target/aarch64-apple-darwin/release && tar -cvf snakepipe-aarch64-apple-darwin.tar.gz snakepipe && mv snakepipe-aarch64-apple-darwin.tar.gz ../../..)
 
@@ -40,6 +41,6 @@ jobs:
       with:
         name: binaries
         path: |
+          snakepipe-x86_64-unknown-linux-gnu.tar.gz
           snakepipe-x86_64-apple-darwin.tar.gz
           snakepipe-aarch64-apple-darwin.tar.gz
-
