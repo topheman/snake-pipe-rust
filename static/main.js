@@ -1,6 +1,5 @@
 /**
  *
- * @param {"loading" | "connected" | "error"} state
  * @param {string} label
  * @param {HTMLElement} rootNode
  */
@@ -62,7 +61,7 @@ function getQrcodeUrlToDisplay(renderBrowserHost) {
   if (location.origin === renderBrowserHost || location.hostname === 'localhost') {
     return renderBrowserHost;
   }
-  // if user accessed via a hostname resolved ouside
+  // if user accessed via a hostname resolved outside
   return location.origin;
 }
 
@@ -129,8 +128,7 @@ function onUpdateRender(cb) {
 }
 
 /**
- * @param {import("./types").SetupFunction} setup
- * @param {import("./types").RenderFrameFunction} renderFrame
+ * Main function
  */
 async function prepareGame() {
   const rootNode = document.getElementById('root');
@@ -182,7 +180,7 @@ async function prepareGame() {
         }
         break
       default:
-        console.error(`Usupported "${eventName}" event`);
+        console.error(`Unsupported "${eventName}" event`);
     }
   }
   bootstrap(process);

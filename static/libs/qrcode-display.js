@@ -1,5 +1,5 @@
 /**
- * Retrived from a previous project of mine:
+ * Retrieved from a previous project of mine:
  * https://github.com/topheman/webrtc-remote-control/blob/master/demo/shared/js/components/qrcode-display.js
  */
 

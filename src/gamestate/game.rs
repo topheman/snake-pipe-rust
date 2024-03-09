@@ -85,7 +85,7 @@ impl Game {
                 return true;
             }
 
-            if !self.snake.is_tail_overlapping() && !self.snake.will_tail_overlapp() {
+            if !self.snake.is_tail_overlapping() && !self.snake.will_tail_overlap() {
                 if *self.snake.get_head_pos() == self.fruit {
                     self.snake.grow();
                     self.snake.update(self.size.0, self.size.1);
