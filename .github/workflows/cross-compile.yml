@@ -36,6 +36,12 @@ jobs:
         (cd target/x86_64-apple-darwin/release && tar -cvf snakepipe-x86_64-apple-darwin.tar.gz snakepipe && mv snakepipe-x86_64-apple-darwin.tar.gz ../../..)
         (cd target/aarch64-apple-darwin/release && tar -cvf snakepipe-aarch64-apple-darwin.tar.gz snakepipe && mv snakepipe-aarch64-apple-darwin.tar.gz ../../..)
 
+    - name: Calculate sha256
+      run: |
+        shasum -a 256 snakepipe-x86_64-unknown-linux-gnu.tar.gz >> sha256.txt
+        shasum -a 256 snakepipe-x86_64-apple-darwin.tar.gz >> sha256.txt
+        shasum -a 256 snakepipe-aarch64-apple-darwin.tar.gz >> sha256.txt
+
     - name: Upload Binaries
       uses: actions/upload-artifact@v3
       with:
@@ -44,3 +50,4 @@ jobs:
           snakepipe-x86_64-unknown-linux-gnu.tar.gz
           snakepipe-x86_64-apple-darwin.tar.gz
           snakepipe-aarch64-apple-darwin.tar.gz
+          sha256.txt
