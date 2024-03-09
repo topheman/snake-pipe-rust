@@ -3,6 +3,8 @@ export type Size = {
   height: number
 }
 
+export type GameState = "paused" | "over" | "running";
+
 export type Game = {
   snake: {
     direction: string
@@ -20,7 +22,7 @@ export type Game = {
     y: number
   }
   score: number
-  state: string
+  state: GameState
 }
 
 export type InitOptions = {

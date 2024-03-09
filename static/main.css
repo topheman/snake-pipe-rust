@@ -35,7 +35,7 @@ body {
   max-width: 160px;
   font-size: 14px;
 }
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   .layout-qrcode {
     position: absolute;
     top: 0;

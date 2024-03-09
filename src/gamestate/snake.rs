@@ -85,7 +85,7 @@ impl Snake {
         false
     }
 
-    pub fn will_tail_overlapp(&self) -> bool {
+    pub fn will_tail_overlap(&self) -> bool {
         let next = self.next_head_pos();
 
         for pos in self.tail.iter() {
