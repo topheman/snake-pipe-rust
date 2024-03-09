@@ -1,5 +1,5 @@
 # inspired by https://github.com/Timmmm/rust_cross_compile_demo/blob/master/.github/workflows/build.yaml
-name: Cross-Compile-MacOS
+name: Cross-Compile
 
 on: [push]
 
@@ -8,7 +8,7 @@ env:
 
 jobs:
   build:
-    if: github.actor == 'topheman' && contains(github.event.head_commit.message, 'compile-macos')
+    if: github.actor == 'topheman' && contains(github.event.head_commit.message, 'cross-compile-all')
     runs-on: ubuntu-latest
 
     steps:
