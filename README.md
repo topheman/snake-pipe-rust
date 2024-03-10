@@ -28,16 +28,23 @@ I've already done [a few rust projects](http://labs.topheman.com) (with WebAssem
 - parsing
 - parallelism
 - async programming
-
-## Prerequisites
-
-- Rust 1.75.0 - [How to install Rust (if you don't have it yet)](https://www.rust-lang.org/tools/install)
+- handling piping/stdin/stdout/signaling ...
 
 ## Install
+
+Any OS - if you have Rust >= 1.75.0  - [How to install Rust (if you don't have it yet)](https://www.rust-lang.org/tools/install)
 
 ```sh
 cargo install snakepipe
 ```
+
+On MacOS, with Homebrew:
+
+```sh
+brew install topheman/tap/snakepipe
+```
+
+Other OS: see [releases](https://github.com/topheman/snake-pipe-rust/releases).
 
 ## Usage
 
@@ -212,6 +219,10 @@ Commands:
 </details>
 
 ## Using as a library
+
+```sh
+cargo add snakepipe # add it to your project
+```
 
 This crate is a cli, but it also exports a lib from where you can import a few utilities, such as `snakepipe::stream::parse_gamestate` - [direct link to docs.rs](https://docs.rs/snakepipe/latest/snakepipe/stream/fn.parse_gamestate.html):
 
