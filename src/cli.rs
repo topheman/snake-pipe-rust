@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 use crossterm;
 
 use crate::common::format_version_to_display;
@@ -57,6 +57,8 @@ pub enum Commands {
     /// Prints out some common pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
     #[command(arg_required_else_help = true)]
     Pipeline(PipelineArgs),
+    /// Generate completions for your own shell (shipped with the homebrew version)
+    GenerateCompletions(GenerateCompletionsArgs),
 }
 
 #[derive(Parser)]
@@ -65,6 +67,19 @@ pub struct PipelineArgs {
     pub sub: Option<Pipeline>,
     #[arg(long)]
     pub list: bool,
+}
+
+#[derive(Parser)]
+pub struct GenerateCompletionsArgs {
+    #[arg(long, value_enum)]
+    pub shell: AvailableShells,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+pub enum AvailableShells {
+    Bash,
+    Fish,
+    Zsh,
 }
 
 pub struct CliOptions<'a> {

@@ -1,7 +1,8 @@
-use clap::Parser;
+use clap::{CommandFactory, Parser};
+use clap_complete::{generate, Shell};
 use crossterm;
 
-use snakepipe::cli::{Cli, CliOptions, Commands};
+use snakepipe::cli::{AvailableShells, Cli, CliOptions, Commands};
 
 use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::InitOptions;
@@ -11,6 +12,15 @@ use snakepipe::render_browser::common::port_is_available;
 use snakepipe::render_browser::run as render_browser_run;
 use snakepipe::stream_sse::run as stream_sse_run;
 use snakepipe::throttle::run as throttle_run;
+
+fn generate_completion(shell: Shell) {
+    generate(
+        shell,
+        &mut Cli::command(),
+        "snakepipe",
+        &mut std::io::stdout(),
+    )
+}
 
 fn main() {
     let cli = Cli::parse();
@@ -54,5 +64,10 @@ fn main() {
         }
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
+        Commands::GenerateCompletions(flags) => match flags.shell {
+            AvailableShells::Bash => generate_completion(Shell::Bash),
+            AvailableShells::Fish => generate_completion(Shell::Fish),
+            AvailableShells::Zsh => generate_completion(Shell::Zsh),
+        },
     }
 }
