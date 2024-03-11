@@ -5,3 +5,6 @@ render.out
 # nodejs
 node_modules
 dist
+
+# build
+/tmp

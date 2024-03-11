@@ -47,3 +47,19 @@ npm run dev-server-sse
 ```
 
 Go to [http://localhost:8080](http://localhost:8080).
+
+## Shell completions
+
+The `snakepipe` cli comes with a `generate-completions` command that will generate a completions script for either `bash`, `zsh` or `fish`.
+
+To test the completions in local, you need `zsh` (I didn't provide a mechanism for the other shells - it works the same way), all you need to do is:
+
+```sh
+cargo build && source ./scripts/test-zsh-completions
+```
+
+The script will temporary add the completions for `snakepipe` to the current terminal tab - don't worry, none of your config file are modified, any modification will disappear once you close the current tab.
+
+# Resources
+
+- 📺 [Understand zsh completions](https://www.youtube.com/watch?v=BHxaUP0kz9w)

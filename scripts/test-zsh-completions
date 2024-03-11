@@ -1,0 +1,9 @@
+# You need to source this file in order to test the completions
+# It won't modify any of your configuration
+# Any modification will disappear once you close the terminal tab
+
+mkdir -p tmp/completions/zsh
+snakepipe generate-completions --shell zsh > tmp/completions/zsh/_snakepipe
+fpath=("$PWD/tmp/completions/zsh" $fpath)
+autoload compinit
+compinit -i
