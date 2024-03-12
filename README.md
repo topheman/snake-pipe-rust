@@ -38,7 +38,7 @@ Any OS - if you have Rust >= 1.75.0  - [How to install Rust (if you don't have i
 cargo install snakepipe
 ```
 
-On MacOS, with Homebrew:
+On MacOS, with Homebrew (ships with its own [shell completions](#shell-completions) for zsh, bash and fish)
 
 ```sh
 brew install topheman/tap/snakepipe
@@ -115,6 +115,12 @@ snakepipe stream-sse|snakepipe render
 You could share your game accross your LAN!
 
 ### 😉 And maybe you'll find other ways?...
+
+## Shell completions
+
+If you install `snakepipe` with Homebrew, it ships with its own completions for zsh, bash and fish and they will be installed without you having to do anything.
+
+If you installed `snakepipe` manually, you can generate the completions files with the `snakepipe generate-completions` command.
 
 ## Manual of commands
 
