@@ -15,7 +15,7 @@ pub enum Pipeline {
     FileWatch,
     /// Play and share a party through an http server
     HttpPlay,
-    /// Render the party you shared through the http server, in the terminal
+    /// Render the party you are sharing through the http server, in the terminal
     HttpWatch,
 }
 

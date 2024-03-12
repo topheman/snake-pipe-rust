@@ -30,7 +30,9 @@ pub enum Commands {
         #[arg(long)]
         height: Option<u32>,
         #[arg(long, default_value_t = 2)]
+        /// Specify the length of the snake you want to start with
         snake_length: u32,
+        /// Adjust size of the game to the size of your terminal
         #[arg(long, default_value_t = false)]
         fit_terminal: bool,
     },
@@ -41,20 +43,23 @@ pub enum Commands {
         /// in ms
         #[arg(long, default_value_t = 120)]
         frame_duration: u32,
+        /// Loop when at the beginning of the stream when it ends
         #[arg(long)]
         loop_infinite: bool,
     },
-    /// Let's you render the game in your browser at http://localhost:8080 by spawning a server and sending stdin via server-sent events to a JavaScript renderer
+    /// Renders the game in your browser by spawning a server and sending stdin via server-sent events to a JavaScript renderer
     RenderBrowser {
+        /// Override port (default 8080)
         #[arg(long, default_value_t = 8080)]
         port: u16,
     },
     /// Connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
     StreamSse {
+        /// Override address (default http://localhost:8080)
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
     },
-    /// Prints out some common pipelines, so that you can copy/paste them to execute (you can pipe to `pbcopy`)
+    /// Print some common pipelines to copy/paste and run (you can pipe to `pbcopy`)
     #[command(arg_required_else_help = true)]
     Pipeline(PipelineArgs),
     /// Generate completions for your own shell (shipped with the homebrew version)
@@ -71,6 +76,7 @@ pub struct PipelineArgs {
 
 #[derive(Parser)]
 pub struct GenerateCompletionsArgs {
+    /// Specify which shell you target - accepted values: bash, fish, zsh
     #[arg(long, value_enum)]
     pub shell: AvailableShells,
 }
