@@ -30,11 +30,23 @@ jobs:
     - name: Build
       run: cargo build --release --target x86_64-unknown-linux-gnu --target x86_64-apple-darwin --target aarch64-apple-darwin
 
+    - name: Generate completions
+      run: |
+        mkdir -p ./target/x86_64-unknown-linux-gnu/release/completions/{zsh,bash,fish}
+        ./target/x86_64-unknown-linux-gnu/release/snakepipe generate-completions --shell zsh > ./target/x86_64-unknown-linux-gnu/release/completions/zsh/_snakepipe
+        ./target/x86_64-unknown-linux-gnu/release/snakepipe generate-completions --shell bash > ./target/x86_64-unknown-linux-gnu/release/completions/bash/snakepipe
+        ./target/x86_64-unknown-linux-gnu/release/snakepipe generate-completions --shell fish > ./target/x86_64-unknown-linux-gnu/release/completions/fish/snakepipe.fish
+
+    - name: Copy completions
+      run: |
+        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/x86_64-apple-darwin/release/completions
+        cp -r ./target/x86_64-unknown-linux-gnu/release/completions ./target/aarch64-apple-darwin/release/completions
+
     - name: Compress
       run: |
-        (cd target/x86_64-unknown-linux-gnu/release && tar -cvf snakepipe-x86_64-unknown-linux-gnu.tar.gz snakepipe && mv snakepipe-x86_64-unknown-linux-gnu.tar.gz ../../..)
-        (cd target/x86_64-apple-darwin/release && tar -cvf snakepipe-x86_64-apple-darwin.tar.gz snakepipe && mv snakepipe-x86_64-apple-darwin.tar.gz ../../..)
-        (cd target/aarch64-apple-darwin/release && tar -cvf snakepipe-aarch64-apple-darwin.tar.gz snakepipe && mv snakepipe-aarch64-apple-darwin.tar.gz ../../..)
+        (cd target/x86_64-unknown-linux-gnu/release && tar -cvf snakepipe-x86_64-unknown-linux-gnu.tar.gz snakepipe completions && mv snakepipe-x86_64-unknown-linux-gnu.tar.gz ../../..)
+        (cd target/x86_64-apple-darwin/release && tar -cvf snakepipe-x86_64-apple-darwin.tar.gz snakepipe completions && mv snakepipe-x86_64-apple-darwin.tar.gz ../../..)
+        (cd target/aarch64-apple-darwin/release && tar -cvf snakepipe-aarch64-apple-darwin.tar.gz snakepipe completions && mv snakepipe-aarch64-apple-darwin.tar.gz ../../..)
 
     - name: Calculate sha256
       run: |
