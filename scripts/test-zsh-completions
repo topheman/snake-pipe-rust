@@ -3,7 +3,7 @@
 # Any modification will disappear once you close the terminal tab
 
 mkdir -p tmp/completions/zsh
-snakepipe generate-completions --shell zsh > tmp/completions/zsh/_snakepipe
+./target/debug/snakepipe generate-completions --shell zsh > tmp/completions/zsh/_snakepipe
 fpath=("$PWD/tmp/completions/zsh" $fpath)
 autoload compinit
 compinit -i
