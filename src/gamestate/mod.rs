@@ -2,6 +2,7 @@ pub mod game;
 pub mod physics;
 pub mod snake;
 
+use std::io::Write;
 use std::time::{Duration, Instant};
 
 use crossterm::event::{poll, read};
@@ -15,7 +16,8 @@ use crate::input::InitOptions;
  * It runs forever and returns if ctrl+c is hit.
  */
 pub fn run(options: InitOptions) -> std::io::Result<()> {
-    println!("{}\r", serde_json::to_string(&options).unwrap());
+    let mut stdout = std::io::stdout();
+    stdout.write(format!("{}\r\n", serde_json::to_string(&options).unwrap()).as_bytes())?;
     let mut main = game::Game::new(
         options.size.width,
         options.size.height,
@@ -40,7 +42,8 @@ pub fn run(options: InitOptions) -> std::io::Result<()> {
                 || main.state == GameState::Over
                 || main.state == GameState::Paused && prev_state == GameState::Running
             {
-                println!("{}\r", serde_json::to_string(&main).unwrap());
+                stdout
+                    .write(format!("{}\r\n", serde_json::to_string(&main).unwrap()).as_bytes())?;
             }
             prev_state = main.state.clone();
         }
