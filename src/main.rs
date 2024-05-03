@@ -44,7 +44,7 @@ fn main() {
 
             // enable_raw_mode()?; // https://docs.rs/crossterm/0.27.0/crossterm/terminal/index.html#raw-mode
             let _ = crossterm::terminal::enable_raw_mode();
-            let _ = gamestate_run(game_options); // this function returns when ctrl+c is hit
+            let _ = gamestate_run(game_options); // this function returns Ok(()) when ctrl+c is hit and Err when it couldn't write to stdout
             let _ = crossterm::terminal::disable_raw_mode();
             std::process::exit(130); // todo handle other signals ?
         }
