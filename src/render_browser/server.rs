@@ -8,12 +8,16 @@ use crate::render_browser::broadcast::Broadcaster;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
-async fn do_broadcast_task(broadcaster: Arc<Broadcaster>, lines: Box<dyn Iterator<Item = Game>>) {
-    for line in lines {
+async fn do_broadcast_task(
+    broadcaster: Arc<Broadcaster>,
+    mut lines: Box<dyn Iterator<Item = Game>>,
+) {
+    while let Some(line) = lines.next() {
         let msg = serde_json::to_string(&line).unwrap();
         println!("{}\r", &msg);
         broadcaster.broadcast(&msg).await;
     }
+    std::process::exit(0);
 }
 
 #[get("/events")]
