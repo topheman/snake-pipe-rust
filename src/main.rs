@@ -63,6 +63,20 @@ fn main() {
             std::process::exit(exitcode::UNAVAILABLE);
         }
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
+        #[cfg(unix)]
+        Commands::SocketPlay { path } => {
+            println!("path: {}", path);
+        }
+        #[cfg(unix)]
+        Commands::SocketWatch { path } => {
+            println!("path: {}", path);
+        }
+        Commands::TcpPlay { port, host } => {
+            println!("{}:{}", host, port);
+        }
+        Commands::TcpWatch { port, host } => {
+            println!("{}:{}", host, port);
+        }
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
         Commands::GenerateCompletions(flags) => match flags.shell {
             AvailableShells::Bash => generate_completion(Shell::Bash),
