@@ -5,6 +5,10 @@ use crate::common::format_version_to_display;
 use crate::input::{InitOptions, SizeOption};
 use crate::pipeline::Pipeline;
 
+const DEFAULT_UNIX_SOCKET_PATH: &str = "/tmp/snakepipe.sock";
+const DEFAULT_TCP_PORT: &str = "8050";
+const DEFAULT_TCP_HOST: &str = "127.0.0.1";
+
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 #[command(propagate_version = true)]
@@ -58,6 +62,36 @@ pub enum Commands {
         /// Override address (default http://localhost:8080)
         #[arg(long, default_value = "http://localhost:8080")]
         address: String,
+    },
+    /// Accepts gamestate from stdin and pushes it to a unix socket
+    SocketPlay {
+        /// Unix socket file path
+        #[arg(long, default_value = DEFAULT_UNIX_SOCKET_PATH)]
+        path: String,
+    },
+    /// Reads gamestate from a unix socket
+    SocketWatch {
+        /// Unix socket file path
+        #[arg(long, default_value = DEFAULT_UNIX_SOCKET_PATH)]
+        path: String,
+    },
+    /// Accepts gamestate from stdin and pushes it to a tcp socket
+    TcpPlay {
+        /// Port number
+        #[arg(long, default_value = DEFAULT_TCP_PORT)]
+        port: u16,
+        /// Tcp host
+        #[arg(long, default_value = DEFAULT_TCP_HOST)]
+        host: String,
+    },
+    /// Accepts gamestate from stdin and pushes it to a tcp socket
+    TcpWatch {
+        /// Port number
+        #[arg(long, default_value = DEFAULT_TCP_PORT)]
+        port: u16,
+        /// Tcp host
+        #[arg(long, default_value = DEFAULT_TCP_HOST)]
+        host: String,
     },
     /// Print some common pipelines to copy/paste and run (you can pipe to `pbcopy`)
     #[command(arg_required_else_help = true)]
