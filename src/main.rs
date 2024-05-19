@@ -6,6 +6,7 @@ use snakepipe::cli::{AvailableShells, Cli, CliOptions, Commands};
 
 use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::InitOptions;
+use snakepipe::net::tcp_play::block_on_tcp_play;
 use snakepipe::pipeline::generate_command as pipeline_generate_command;
 use snakepipe::render::run as render_run;
 use snakepipe::render_browser::common::port_is_available;
@@ -65,17 +66,18 @@ fn main() {
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
         #[cfg(unix)]
         Commands::SocketPlay { path } => {
-            println!("path: {}", path);
+            eprintln!("path: {}", path);
         }
         #[cfg(unix)]
         Commands::SocketWatch { path } => {
-            println!("path: {}", path);
+            eprintln!("path: {}", path);
         }
         Commands::TcpPlay { port, host } => {
-            println!("{}:{}", host, port);
+            eprintln!("{}:{}", host, port);
+            let _ = block_on_tcp_play(format!("{}:{}", host, port).to_string());
         }
         Commands::TcpWatch { port, host } => {
-            println!("{}:{}", host, port);
+            eprintln!("{}:{}", host, port);
         }
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
         Commands::GenerateCompletions(flags) => match flags.shell {
