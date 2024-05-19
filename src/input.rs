@@ -4,7 +4,7 @@ use std::io::{stdin, BufRead, Lines};
 
 // options
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, Default)]
 pub struct SizeOption {
     pub width: u32,
     pub height: u32,
@@ -12,7 +12,7 @@ pub struct SizeOption {
 
 /// Holds the options that were passed to the cli with a flag
 /// that are relevent for rendering the game.
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct InitOptions {
     pub frame_duration: u32,
