@@ -1,4 +1,4 @@
 pub mod common;
-pub mod tcp_play;
+pub mod play;
 
 pub fn foo() {}

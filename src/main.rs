@@ -6,7 +6,7 @@ use snakepipe::cli::{AvailableShells, Cli, CliOptions, Commands};
 
 use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::InitOptions;
-use snakepipe::net::tcp_play::block_on_tcp_play;
+use snakepipe::net::play::{block_on_play, PlayProps};
 use snakepipe::pipeline::generate_command as pipeline_generate_command;
 use snakepipe::render::run as render_run;
 use snakepipe::render_browser::common::port_is_available;
@@ -74,7 +74,7 @@ fn main() {
         }
         Commands::TcpPlay { port, host } => {
             eprintln!("{}:{}", host, port);
-            let _ = block_on_tcp_play(format!("{}:{}", host, port).to_string());
+            let _ = block_on_play(PlayProps::Tcp(format!("{}:{}", host, port).to_string()));
         }
         Commands::TcpWatch { port, host } => {
             eprintln!("{}:{}", host, port);
