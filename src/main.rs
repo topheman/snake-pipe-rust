@@ -13,6 +13,7 @@ use snakepipe::render_browser::common::port_is_available;
 use snakepipe::render_browser::run as render_browser_run;
 use snakepipe::stream_sse::run as stream_sse_run;
 use snakepipe::throttle::run as throttle_run;
+use snakepipe::utils::resolve_path;
 
 fn generate_completion(shell: Shell) {
     generate(
@@ -67,6 +68,26 @@ fn main() {
         #[cfg(unix)]
         Commands::SocketPlay { path } => {
             eprintln!("path: {}", path);
+            match resolve_path(std::path::PathBuf::from(&path)) {
+                Ok(path) => {
+                    eprintln!("resolved path: {:?}", &path);
+                    match std::fs::remove_file(&path) {
+                        Ok(_) => {}
+                        Err(err) => {
+                            if err.kind() != std::io::ErrorKind::NotFound {
+                                eprintln!("err {:?}", err);
+                                eprintln!("Failed to remove {:?}", &path);
+                                std::process::exit(exitcode::OSFILE);
+                            }
+                        }
+                    }
+                    let _ = block_on_play(PlayProps::Socket(path));
+                }
+                Err(_) => {
+                    eprintln!("Could not resolve path {}", path);
+                    std::process::exit(exitcode::OSFILE);
+                }
+            }
         }
         #[cfg(unix)]
         Commands::SocketWatch { path } => {
