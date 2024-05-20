@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use crate::common::format_version_to_display;
 use crate::input::{parse_gamestate, Game, InitOptions};
 use tokio::io::AsyncWriteExt;
@@ -5,13 +7,18 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::runtime::Runtime;
 use tokio::sync::broadcast;
 
-pub fn block_on_tcp_play(bind_addr: String) -> std::io::Result<()> {
+pub enum PlayProps {
+    Tcp(String),
+    Socket(PathBuf),
+}
+
+pub fn block_on_play(props: PlayProps) -> std::io::Result<()> {
     let rt = Runtime::new()?;
-    rt.block_on(tcp_play(bind_addr));
+    rt.block_on(play(props));
     Ok(())
 }
 
-pub async fn tcp_play(bind_addr: String) {
+pub async fn play(props: PlayProps) {
     match parse_gamestate() {
         Ok(input) => {
             // prepare init_options
@@ -24,12 +31,19 @@ pub async fn tcp_play(bind_addr: String) {
             // prepare broadcast channel that will link between stdin and writing into tcp sockets
             let (tx, _) = broadcast::channel::<Game>(10);
 
-            // tcp server that handle tcp connection + writes on sockets when receiving msg from tx channel
-            tokio::spawn(create_server(
-                bind_addr,
-                tx.clone(),
-                options_passthrough.clone(),
-            ));
+            // according to the in put passed (either address:port, or filepath to unix socket)
+            // spawn the correct server (tcp or )
+            match props {
+                PlayProps::Tcp(bind_addr) => {
+                    // tcp server that handle tcp connection + writes on sockets when receiving msg from tx channel
+                    tokio::spawn(create_tcp_server(
+                        bind_addr,
+                        tx.clone(),
+                        options_passthrough.clone(),
+                    ));
+                }
+                PlayProps::Socket(_) => todo!(),
+            }
 
             // reading stdin and broadcast to tx that will trigger writes on opened tcp sockets
             brodcast_lines(input.lines, tx.clone()).unwrap();
@@ -55,7 +69,7 @@ fn brodcast_lines(
     Ok(())
 }
 
-async fn create_server(
+async fn create_tcp_server(
     bind_addr: String,
     tx: tokio::sync::broadcast::Sender<Game>,
     init_options: InitOptions,
