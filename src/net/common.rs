@@ -1,6 +1,4 @@
-use std::net::*;
-
-pub enum StreamConstructorArgs {
-    Tcp(SocketAddr),
+pub enum StreamType {
+    Tcp(String),
     Socket(std::path::PathBuf),
 }
