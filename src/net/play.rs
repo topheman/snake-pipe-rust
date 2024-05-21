@@ -2,23 +2,19 @@ use std::path::PathBuf;
 
 use crate::common::format_version_to_display;
 use crate::input::{parse_gamestate, Game, InitOptions};
+use crate::net::common::StreamType;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{TcpListener, UnixListener};
 use tokio::runtime::Runtime;
 use tokio::sync::broadcast;
 
-pub enum PlayProps {
-    Tcp(String),
-    Socket(PathBuf),
-}
-
-pub fn block_on_play(props: PlayProps) -> std::io::Result<()> {
+pub fn block_on_play(props: StreamType) -> std::io::Result<()> {
     let rt = Runtime::new()?;
     rt.block_on(play(props));
     Ok(())
 }
 
-pub async fn play(props: PlayProps) {
+pub async fn play(props: StreamType) {
     match parse_gamestate() {
         Ok(input) => {
             // prepare init_options
@@ -34,14 +30,14 @@ pub async fn play(props: PlayProps) {
             // according to the input passed (either address:port, or filepath to unix socket)
             // spawn the correct server (tcp or unix socket)
             match props {
-                PlayProps::Tcp(bind_addr) => {
+                StreamType::Tcp(bind_addr) => {
                     tokio::spawn(create_tcp_server(
                         bind_addr,
                         tx.clone(),
                         options_passthrough.clone(),
                     ));
                 }
-                PlayProps::Socket(socket_path) => {
+                StreamType::Socket(socket_path) => {
                     tokio::spawn(create_socket_server(
                         socket_path,
                         tx.clone(),
