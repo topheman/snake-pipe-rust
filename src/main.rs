@@ -8,6 +8,7 @@ use snakepipe::gamestate::run as gamestate_run;
 use snakepipe::input::InitOptions;
 use snakepipe::net::common::StreamType;
 use snakepipe::net::play::block_on_play;
+use snakepipe::net::watch::block_on_watch;
 use snakepipe::pipeline::generate_command as pipeline_generate_command;
 use snakepipe::render::run as render_run;
 use snakepipe::render_browser::common::port_is_available;
@@ -100,6 +101,8 @@ fn main() {
         }
         Commands::TcpWatch { port, host } => {
             eprintln!("{}:{}", host, port);
+            let res = block_on_watch(StreamType::Tcp(format!("{}:{}", host, port).to_string()));
+            eprintln!("res {:?}", res);
         }
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
         Commands::GenerateCompletions(flags) => match flags.shell {
