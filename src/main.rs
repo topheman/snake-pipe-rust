@@ -86,7 +86,7 @@ fn main() {
                     let _ = block_on_play(StreamType::Socket(path));
                 }
                 Err(_) => {
-                    eprintln!("Could not resolve path {}", path);
+                    eprintln!("{} not found.", path);
                     std::process::exit(exitcode::OSFILE);
                 }
             }
@@ -94,6 +94,16 @@ fn main() {
         #[cfg(unix)]
         Commands::SocketWatch { path } => {
             eprintln!("path: {}", path);
+            match resolve_path(std::path::PathBuf::from(&path)) {
+                Ok(path) => {
+                    eprintln!("resolved path: {:?}", &path);
+                    let _ = block_on_watch(StreamType::Socket(path));
+                }
+                Err(_) => {
+                    eprintln!("{} not found.", path);
+                    std::process::exit(exitcode::OSFILE);
+                }
+            }
         }
         Commands::TcpPlay { port, host } => {
             eprintln!("{}:{}", host, port);
@@ -101,8 +111,7 @@ fn main() {
         }
         Commands::TcpWatch { port, host } => {
             eprintln!("{}:{}", host, port);
-            let res = block_on_watch(StreamType::Tcp(format!("{}:{}", host, port).to_string()));
-            eprintln!("res {:?}", res);
+            let _ = block_on_watch(StreamType::Tcp(format!("{}:{}", host, port).to_string()));
         }
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),
         Commands::GenerateCompletions(flags) => match flags.shell {
