@@ -1,26 +1,30 @@
 use crate::net::common::StreamType;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
-    net::TcpStream,
+    net::{TcpStream, UnixStream},
     runtime::Runtime,
 };
 
 pub fn block_on_watch(props: StreamType) -> std::io::Result<()> {
     let rt = Runtime::new()?;
-    rt.block_on(watch(props));
+    rt.block_on(watch(props))?;
     Ok(())
 }
 
-pub async fn watch(props: StreamType) {
+pub async fn watch(props: StreamType) -> std::io::Result<()> {
     match props {
-        StreamType::Tcp(bind_addr) => handle_tcp_stream(bind_addr).await.unwrap(),
-        StreamType::Socket(_socket_path) => todo!(),
+        StreamType::Tcp(bind_addr) => {
+            let stream = TcpStream::connect(&bind_addr).await?;
+            handle_stream(stream).await
+        }
+        StreamType::Socket(socket_path) => {
+            let stream = UnixStream::connect(socket_path).await?;
+            handle_stream(stream).await
+        }
     }
 }
 
-async fn handle_tcp_stream(bind_addr: String) -> std::io::Result<()> {
-    let mut stream = TcpStream::connect(&bind_addr).await?;
-
+async fn handle_stream(mut stream: impl AsyncReadExt + std::marker::Unpin) -> std::io::Result<()> {
     let mut buffer = [0; 1024];
 
     loop {
