@@ -29,6 +29,7 @@ I've already done [a few rust projects](http://labs.topheman.com) (with WebAssem
 - parallelism
 - async programming
 - handling piping/stdin/stdout/signaling ...
+- inter-process communication
 
 ## Install
 
@@ -48,7 +49,9 @@ Other OS: see [releases](https://github.com/topheman/snake-pipe-rust/releases).
 
 ## Usage
 
-### 🎮 Play in terminal
+### Piping
+
+#### 🎮 Play in terminal
 
 ```sh
 # basic usage
@@ -61,7 +64,7 @@ snakepipe gamestate --frame-duration 80 --width 70 --height 20 --snakepipe-lengt
 snakepipe --help
 ```
 
-### 📼 You can even record and replay using basic piping
+#### 📼 You can even record and replay using basic piping
 
 ```sh
 # record a game into a file using the builtin `tee` command utility
@@ -71,21 +74,7 @@ snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
 cat /tmp/snakepipe-output|snakepipe throttle|snakepipe render
 ```
 
-### 📺 You can also mirror your playing terminal into another one
-
-Open two terminals that will communicate via a file that will be `tail`ed and piped to `snakepipe render`
-
-```sh
-# mirroring terminal
-cat /dev/null > /tmp/snakepipe-output && tail -f /tmp/snakepipe-output|snakepipe render
-```
-
-```sh
-# main terminal
-snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
-```
-
-### 🖥 You can mirror your playing terminal into a server you can open in a browser
+#### 🖥 You can mirror your playing terminal into a server you can open in a browser
 
 ```sh
 snakepipe gamestate|snakepipe render-browser|snakepipe render
@@ -93,7 +82,7 @@ snakepipe gamestate|snakepipe render-browser|snakepipe render
 
 Then open [http://localhost:8080](http://localhost:8080). You'll be able to switch between renderers in your browser as you are playing in your terminal (thanks to server-sent events).
 
-### 🖼 You can mirror your playing terminal into another one, through http
+#### 🖼 You can mirror your playing terminal into another one, through http
 
 Open two terminals:
 
@@ -113,6 +102,54 @@ snakepipe stream-sse|snakepipe render
 ```
 
 You could share your game accross your LAN!
+
+### IPC (Inter-process communication)
+
+#### TCP
+
+Open two terminals. `snakepipe tcp-play` will expose a process that accepts tcp connections (on port 8050 by default). You can connect to it via [netcat](https://en.wikipedia.org/wiki/Netcat) (the `nc` command), that will pipe the tcp stream output to stdout.
+
+```sh
+# main terminal
+snakepipe gamestate|snakepipe tcp-play|snakepipe render
+```
+
+```sh
+# mirroring terminal (with netcat)
+nc localhost 8050|snakepipe render
+```
+
+#### Unix domain sockets
+
+Open two terminals. `snakepipe socket-play` will expose a [unix domain socket](https://en.wikipedia.org/wiki/Unix_domain_socket) (by default on `/tmp/snakepipe.sock`). You can connect to it via [netcat](https://en.wikipedia.org/wiki/Netcat) (the `nc` command), that will pipe the socket stream to stdout.
+
+```sh
+# main terminal
+snakepipe gamestate|snakepipe tcp-play|snakepipe render
+```
+
+```sh
+# mirroring terminal (with netcat)
+nc -U /tmp/snakepipe.sock|snakepipe render
+```
+
+### Others
+
+#### 📺 You can also mirror your playing terminal into another one
+
+You should prefer using IPC.
+
+Open two terminals that will communicate via a file that will be `tail`ed and piped to `snakepipe render`
+
+```sh
+# mirroring terminal
+cat /dev/null > /tmp/snakepipe-output && tail -f /tmp/snakepipe-output|snakepipe render
+```
+
+```sh
+# main terminal
+snakepipe gamestate|tee /tmp/snakepipe-output|snakepipe render
+```
 
 ### 😉 And maybe you'll find other ways?...
 
