@@ -13,6 +13,10 @@ This one follows the [unix philosophy](https://en.wikipedia.org/wiki/Unix_philos
 - `snakepipe throttle` reads a pre-recorded game from `stdin` and writes to `stdout` each tick so that `snakepipe render` can pick it up
 - `snakepipe render-browser` spawns a server and sends `stdin` via server-sent events to a JavaScript renderer in your browser
 - `snakepipe stream-sse` connects to the server spawned by `render-browser` and streams server-sent events back to the terminal
+- `snakepipe socket-play` accepts gamestate from stdin and pushes it to a unix socket
+- `snakepipe socket-watch` reads gamestate from a unix socket
+- `snakepipe tcp-play` accepts gamestate from stdin and pushes it to a tcp socket
+- `snakepipe tcp-watch` reads gamestate from a tcp socket
 - `snakepipe pipeline <command>` prints out the most common pipelines (combinations of commands), so that you could directly `pbcopy`/paste them
 
 That way:
@@ -115,8 +119,9 @@ snakepipe gamestate|snakepipe tcp-play|snakepipe render
 ```
 
 ```sh
-# mirroring terminal (with netcat)
-nc localhost 8050|snakepipe render
+# mirroring terminal
+nc localhost 8050|snakepipe render # with netcat
+snakepipe tcp-watch|snakepipe render # or with snakepipe itself
 ```
 
 #### Unix domain sockets
@@ -125,12 +130,13 @@ Open two terminals. `snakepipe socket-play` will expose a [unix domain socket](h
 
 ```sh
 # main terminal
-snakepipe gamestate|snakepipe tcp-play|snakepipe render
+snakepipe gamestate|snakepipe socket-play|snakepipe render
 ```
 
 ```sh
-# mirroring terminal (with netcat)
-nc -U /tmp/snakepipe.sock|snakepipe render
+# mirroring terminal
+nc -U /tmp/snakepipe.sock|snakepipe render # with netcat
+snakepipe socket-watch|snakepipe render # or with snakepipe itself
 ```
 
 ### Others
@@ -240,6 +246,56 @@ Usage: snakepipe stream-sse [OPTIONS]
 
 Options:
       --address \<ADDRESS>  [default: http://localhost:8080]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe socket-play --help</code></summary>
+  <pre>
+Accepts gamestate from stdin and pushes it to a unix socket
+
+Usage: snakepipe socket-play [OPTIONS]
+
+Options:
+      --path \<PATH>  Unix socket file path [default: /tmp/snakepipe.sock]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe socket-watch --help</code></summary>
+  <pre>
+Reads gamestate from a unix socket
+
+Usage: snakepipe socket-watch [OPTIONS]
+
+Options:
+      --path \<PATH>  Unix socket file path [default: /tmp/snakepipe.sock]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe tcp-play --help</code></summary>
+  <pre>
+Accepts gamestate from stdin and pushes it to a tcp socket
+
+Usage: snakepipe tcp-play [OPTIONS]
+
+Options:
+      --port \<PORT>  Port number [default: 8050]
+      --host \<HOST>  Tcp host [default: 127.0.0.1]
+  </pre>
+</details>
+
+<details>
+  <summary><code>snakepipe tcp-watch --help</code></summary>
+  <pre>
+Reads gamestate from a tcp socket
+
+Usage: snakepipe tcp-watch [OPTIONS]
+
+Options:
+      --port \<PORT>  Port number [default: 8050]
+      --host \<HOST>  Tcp host [default: 127.0.0.1]
   </pre>
 </details>
 
