@@ -84,7 +84,7 @@ pub enum Commands {
         #[arg(long, default_value = DEFAULT_TCP_HOST)]
         host: String,
     },
-    /// Accepts gamestate from stdin and pushes it to a tcp socket
+    /// Reads gamestate from a tcp socket
     TcpWatch {
         /// Port number
         #[arg(long, default_value = DEFAULT_TCP_PORT)]
