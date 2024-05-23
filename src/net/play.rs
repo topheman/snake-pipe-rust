@@ -49,7 +49,10 @@ pub async fn play(props: StreamType) {
             // reading stdin and broadcast to tx that will trigger writes on opened tcp/unix sockets
             brodcast_lines(input.lines, tx.clone()).unwrap();
         }
-        Err(_) => todo!(),
+        Err(e) => {
+            eprintln!("Error occurred while parsing stdin: \"{}\"", e);
+            std::process::exit(exitcode::DATAERR);
+        }
     }
 }
 
@@ -60,12 +63,7 @@ fn brodcast_lines(
     for parsed_line in lines {
         println!("{}\r", serde_json::to_string(&parsed_line).unwrap());
         // we don't care if there are clients to broadcast yet or not
-        match tx.send(parsed_line) {
-            Ok(lines) => {
-                eprintln!("Clients active: {}\r", lines);
-            }
-            Err(_err) => {}
-        }
+        let _ = tx.send(parsed_line);
     }
     Ok(())
 }
@@ -85,7 +83,7 @@ async fn create_tcp_server(
                         let _ = handle_client_task(tcp_stream, tx, init_options).await;
                     });
                 }
-                Err(e) => eprintln!("Couldn't get client {:?}\r", e),
+                Err(_) => {}
             }
         },
         Err(err) => {
@@ -115,7 +113,7 @@ async fn create_socket_server(
                     let _ = handle_client_task(socket_stream, tx, init_options).await;
                 });
             }
-            Err(e) => eprintln!("Couldn't get client {:?}\r", e),
+            Err(_) => {}
         }
     }
 }
@@ -125,7 +123,6 @@ async fn handle_client_task(
     tx: tokio::sync::broadcast::Sender<Game>,
     init_options: InitOptions,
 ) -> std::io::Result<()> {
-    eprintln!("before loop\r");
     let mut rx = tx.subscribe();
     stream
         .write_all(format!("{}\r\n", serde_json::to_string(&init_options).unwrap()).as_bytes())

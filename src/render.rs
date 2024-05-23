@@ -110,7 +110,8 @@ pub fn run() {
             .unwrap();
         }
         Err(e) => {
-            println!("Error occurred while parsing stdin: \"{}\"", e);
+            eprintln!("Error occurred while parsing stdin: \"{}\"", e);
+            std::process::exit(exitcode::DATAERR);
         }
     }
 }

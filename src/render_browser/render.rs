@@ -18,6 +18,9 @@ pub fn run(port: u16) {
             println!("{}\r", serde_json::to_string(&options_passthrough).unwrap());
             let _ = launch_server(input.lines, options_passthrough, port);
         }
-        Err(_) => todo!(),
+        Err(e) => {
+            eprintln!("Error occurred while parsing stdin: \"{}\"", e);
+            std::process::exit(exitcode::DATAERR);
+        }
     }
 }
