@@ -1,4 +1,5 @@
 use crate::net::common::StreamType;
+use crossterm::style::Stylize;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpStream, UnixStream},
@@ -17,16 +18,26 @@ pub async fn watch(props: StreamType) -> std::io::Result<()> {
             let stream = TcpStream::connect(&bind_addr).await?;
             handle_stream(stream).await
         }
-        StreamType::Socket(socket_path) => {
-            let stream = UnixStream::connect(socket_path).await?;
-            handle_stream(stream).await
-        }
+        StreamType::Socket(socket_path) => match UnixStream::connect(&socket_path).await {
+            Ok(stream) => handle_stream(stream).await,
+            Err(err) => {
+                if err.kind() == std::io::ErrorKind::ConnectionRefused {
+                    eprintln!(
+                        "Connection refused to {}, are you targetting the correct socket ?\r\n\r\nDid you want to use the {} command?",
+                        socket_path.display(),
+                         "snakepipe socket-play".bold()
+                    );
+                } else {
+                    eprintln!("Connection refused to {}", socket_path.display());
+                }
+                Err(err)
+            }
+        },
     }
 }
 
 async fn handle_stream(mut stream: impl AsyncReadExt + std::marker::Unpin) -> std::io::Result<()> {
     let mut buffer = [0; 1024];
-
     loop {
         // Read data from the stream
         match stream.read(&mut buffer).await {

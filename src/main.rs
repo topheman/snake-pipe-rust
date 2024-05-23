@@ -68,49 +68,40 @@ fn main() {
         }
         Commands::StreamSse { address } => stream_sse_run(address.to_string()),
         #[cfg(unix)]
-        Commands::SocketPlay { path } => {
-            eprintln!("path: {}", path);
-            match resolve_path(std::path::PathBuf::from(&path)) {
-                Ok(path) => {
-                    eprintln!("resolved path: {:?}", &path);
-                    match std::fs::remove_file(&path) {
-                        Ok(_) => {}
-                        Err(err) => {
-                            if err.kind() != std::io::ErrorKind::NotFound {
-                                eprintln!("err {:?}", err);
-                                eprintln!("Failed to remove {:?}", &path);
-                                std::process::exit(exitcode::OSFILE);
-                            }
+        Commands::SocketPlay { path } => match resolve_path(std::path::PathBuf::from(&path)) {
+            Ok(path) => {
+                match std::fs::remove_file(&path) {
+                    Ok(_) => {}
+                    Err(err) => {
+                        if err.kind() != std::io::ErrorKind::NotFound {
+                            eprintln!("Failed to remove {:?}", &path);
+                            std::process::exit(exitcode::OSFILE);
                         }
                     }
-                    let _ = block_on_play(StreamType::Socket(path));
                 }
-                Err(_) => {
-                    eprintln!("{} not found.", path);
-                    std::process::exit(exitcode::OSFILE);
-                }
+                let _ = block_on_play(StreamType::Socket(path));
             }
-        }
+            Err(_) => {
+                eprintln!("{} not found.", path);
+                std::process::exit(exitcode::OSFILE);
+            }
+        },
         #[cfg(unix)]
-        Commands::SocketWatch { path } => {
-            eprintln!("path: {}", path);
-            match resolve_path(std::path::PathBuf::from(&path)) {
-                Ok(path) => {
-                    eprintln!("resolved path: {:?}", &path);
-                    let _ = block_on_watch(StreamType::Socket(path));
-                }
-                Err(_) => {
-                    eprintln!("{} not found.", path);
-                    std::process::exit(exitcode::OSFILE);
+        Commands::SocketWatch { path } => match resolve_path(std::path::PathBuf::from(&path)) {
+            Ok(path) => {
+                if let Err(_) = block_on_watch(StreamType::Socket(path)) {
+                    std::process::exit(exitcode::IOERR);
                 }
             }
-        }
+            Err(_) => {
+                eprintln!("{} not found.", path);
+                std::process::exit(exitcode::OSFILE);
+            }
+        },
         Commands::TcpPlay { port, host } => {
-            eprintln!("{}:{}", host, port);
             let _ = block_on_play(StreamType::Tcp(format!("{}:{}", host, port).to_string()));
         }
         Commands::TcpWatch { port, host } => {
-            eprintln!("{}:{}", host, port);
             let _ = block_on_watch(StreamType::Tcp(format!("{}:{}", host, port).to_string()));
         }
         Commands::Pipeline(cmd) => pipeline_generate_command(cmd.sub, cmd.list, ""),

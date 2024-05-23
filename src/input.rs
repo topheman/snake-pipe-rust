@@ -133,7 +133,7 @@ impl Input {
 ///             }
 ///         }
 ///         Err(e) => {
-///             println!("Error occurred while parsing stdin: \"{}\"", e);
+///             eprintln!("Error occurred while parsing stdin: \"{}\"", e);
 ///         }
 ///     }
 /// }

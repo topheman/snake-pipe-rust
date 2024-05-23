@@ -55,7 +55,7 @@ pub fn run(frame_duration: u32, loop_infinite: bool) {
         }
         Err(e) => {
             eprintln!("Error occurred while parsing stdin: \"{}\"", e);
-            std::process::exit(1);
+            std::process::exit(exitcode::DATAERR);
         }
     }
 }
