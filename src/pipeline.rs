@@ -17,6 +17,14 @@ pub enum Pipeline {
     HttpPlay,
     /// Render the party you are sharing through the http server, in the terminal
     HttpWatch,
+    /// Play and share a party through a unix socket
+    SocketPlay,
+    /// Render the party you are sharing through a unix socket in realtime
+    SocketWatch,
+    /// Play and share a party through tcp
+    TcpPlay,
+    /// Render the party you are sharing through tcp in realtime
+    TcpWatch,
 }
 
 fn print_formatted_pipeline(pipeline: &str, prefix: &str) {
@@ -54,6 +62,20 @@ pub fn generate_command(pipeline: Option<Pipeline>, list: bool, prefix: &str) {
         ),
         Some(Pipeline::HttpWatch) => {
             print_formatted_pipeline("snakepipe stream-sse|snakepipe render", prefix)
+        }
+        Some(Pipeline::SocketPlay) => print_formatted_pipeline(
+            "snakepipe gamestate|snakepipe socket-play|snakepipe render",
+            prefix,
+        ),
+        Some(Pipeline::SocketWatch) => {
+            print_formatted_pipeline("snakepipe socket-watch|snakepipe render", prefix)
+        }
+        Some(Pipeline::TcpPlay) => print_formatted_pipeline(
+            "snakepipe gamestate|snakepipe tcp-play|snakepipe render",
+            prefix,
+        ),
+        Some(Pipeline::TcpWatch) => {
+            print_formatted_pipeline("snakepipe tcp-watch|snakepipe render", prefix)
         }
         None => {
             if list {
